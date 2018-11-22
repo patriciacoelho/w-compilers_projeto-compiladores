@@ -33,11 +33,11 @@ public class Scanner {
     
     private byte scanToken(){
         return 0;
-        //
+        //TO DO
     }
     
     private void scanSeparator(){
-        
+        //TO DO
     }
     public Token scan(){
         while(currentChar == '4'){
