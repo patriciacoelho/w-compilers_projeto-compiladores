@@ -1,23 +1,40 @@
 package compilador;
+
+import java.io.BufferedReader;
+
+
 public class Scanner {
-    private char currentChar; //TO DO : pegar primeiro caractere do txt
-    
-    private int linha, col;
+    private BufferedReader arquivo;
+    private char currentChar; 
+    private int linha = 0;
+    private int col;
     private byte currentKind;
     private StringBuffer currentValue;
+
+       
+    Scanner(BufferedReader arquivo)throws Exception{
+        this.arquivo = arquivo;
+        currentChar = (char)arquivo.read(); //TO DO : pegar primeiro caractere do txt
+        System.out.println(currentChar);
+        System.out.println("valor corrente = "+currentValue);
+        col=0;
+    }
     
-    private void take(char expectedChar){
+    private void take(char expectedChar) throws Exception{
         if(currentChar == expectedChar){
             currentValue.append(currentChar);
-            //currentChar = proximo caractere;
+            currentChar = (char)arquivo.read(); //currentChar = proximo caractere;
+            System.out.println(currentChar);
         } else {
             //retorna token erro
         }
     }
     
-    private void takeIt(){
+    private void takeIt() throws Exception{
         currentValue.append(currentChar);
-        //currentChar = proximo caractere;
+        currentChar = (char)arquivo.read(); //currentChar = proximo caractere;
+        System.out.println(currentChar);
+        col++;
     }
     
     private boolean isDigit(char c){
@@ -32,10 +49,10 @@ public class Scanner {
         return c >= 32 && c<= 126;
     }
     
-    private byte scanToken(){
+    private byte scanToken() throws Exception{
         if(isLetter(currentChar)){
             takeIt();
-             while(isLetter(currentChar) || isDigit(currentChar)){ //<letra>(<letra> | <digito>)* 
+            while(isLetter(currentChar) || isDigit(currentChar)){ //<letra>(<letra> | <digito>)* 
                 takeIt();
             }
             return Token.ID;
@@ -127,14 +144,19 @@ public class Scanner {
             takeIt();
             return Token.VIRG;
         }
+        if(currentChar == '_'){ //SYMBOL DO EOF REAL
+            takeIt();
+            return Token.EOF;
+        }
         //TO DO : LER O EOF e o float-lit
-            
+        
+        return Token.ERRO;
        
         
         //TO DO : return erro
     }
     
-    private void scanSeparator(){ //Revisar simbolos
+    private void scanSeparator() throws Exception{ //Revisar simbolos
         switch(currentChar){
             case '!':{ //marcação de linha de comentário assim como esse //
                 takeIt();
@@ -146,13 +168,15 @@ public class Scanner {
             break;
             case ' ':
             case '\n':
+            case 13:
+            case 9:
                 takeIt();
             break;
         }
     }
     
-    public Token scan(){
-        while(currentChar == '!' || currentChar == ' ' || currentChar == '\n'){
+    public Token scan() throws Exception{
+        while(currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == 13 || currentChar == '\t'){
             scanSeparator();
         }
         currentValue = new StringBuffer("");
