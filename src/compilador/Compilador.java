@@ -12,11 +12,11 @@ public class Compilador {
         BufferedReader arquivo = new BufferedReader(new FileReader(file));
         
         Scanner scanner = new Scanner(arquivo);
-        Token tk = new Token((byte)1,"0",0,0);
-        while(tk.kind != Token.EOF){
+        Token tk;
+        do{
             tk = scanner.scan();
             tk.imprimir();
-        }
+        }while(tk.kind != Token.EOF);
         
         arquivo.close();
        

@@ -35,12 +35,12 @@ class Token {
             PONTO_PONTO = 18, PONTO = 19, VIRG = 20, BEGIN  = 21, END = 22, 
             IF = 23, THEN = 24, ELSE = 25, VAR = 26, WHILE = 27, DO = 28,
             OR = 29, AND = 30, PROGRAM = 31, ARRAY = 32, OF = 33, INTEGER = 34,
-            REAL = 35, BOOLEAN = 36, EOF = 37, ERRO = 38;
+            REAL = 35,TRUE= 36, FALSE = 37, BOOLEAN = 36, EOF = 39, ERRO = 40;
     
     private final static String[] spellings = {
         "<id>", "<int_lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", ">",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
         "then", "else", "var","while", "do", "or", "and", "program", "array",
-        "of", "integer", "real", "boolean", "<EOF>"
+        "of", "integer", "real","true","false", "boolean", "<EOF>"
     };
 }
