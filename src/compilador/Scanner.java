@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 
 
 public class Scanner {
-    private BufferedReader arquivo;
+    final private BufferedReader arquivo;
     private char currentChar; 
     private int linha;
     private int col,aux;
@@ -170,6 +170,7 @@ public class Scanner {
         //TO DO : LER O EOF e o float-lit
         //System.out.println((int)currentChar);
         //System.out.println("o vilão está acima");
+        takeIt();
         return Token.ERRO;
        
         

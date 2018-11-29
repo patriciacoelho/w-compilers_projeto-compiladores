@@ -1,5 +1,5 @@
 package compilador;
-class Token {
+public class Token {
     
     public byte kind;
     public String value;
