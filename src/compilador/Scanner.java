@@ -1,6 +1,7 @@
 package compilador;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
 
 public class Scanner {
@@ -61,10 +62,21 @@ public class Scanner {
             return Token.ID;
         }
         if(isDigit(currentChar)){ //<digito><digito>*
-            takeIt();
-            aux = col;
-            while(isDigit(currentChar)){ 
+            do{ 
                 takeIt();
+                aux = col;
+            }while(isDigit(currentChar));
+            if(currentChar == '.'){
+                takeIt();
+                if(isDigit(currentChar)){
+                    takeIt();
+                    while(isDigit(currentChar)){ 
+                        takeIt();
+                    }
+                    return Token.FLOAT_LIT;
+                } else{
+                    return Token.FLOAT_LIT;
+                }
             }
             return Token.INT_LIT;
         }
@@ -154,7 +166,16 @@ public class Scanner {
                 takeIt();
                 return Token.PONTO_PONTO;
             } else {
-                return Token.PONTO;
+                if(isDigit(currentChar)){
+                    takeIt();
+                    while(isDigit(currentChar)){ 
+                        takeIt();
+                    }
+                    return Token.FLOAT_LIT;
+                } else{
+                    return Token.PONTO;
+                }
+                
             }
         }
         if(currentChar == ','){
@@ -210,5 +231,16 @@ public class Scanner {
         currentValue = new StringBuffer("");
         currentKind = scanToken();
         return new Token(currentKind, currentValue.toString(), linha, aux); //TO DO : add linha e coluna
+    }
+    
+    public ArrayList<Token> ler() throws Exception{
+        ArrayList<Token> lista = new ArrayList<>();
+        Token tk;
+        do{
+            tk = scan();
+            //tk.imprimir();
+            lista.add(tk);
+        }while(tk.kind != Token.EOF);
+        return lista;
     }
 }

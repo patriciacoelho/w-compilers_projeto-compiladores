@@ -8,7 +8,7 @@ public class Token {
     
     public Token(byte kind, String value, int line, int col){
         this.kind = kind;
-        this.value = value;
+        this.value = spellings[kind]; //value;
         this.line = line;
         this.col = col;
         
@@ -16,6 +16,7 @@ public class Token {
             for(byte k = BEGIN;k <= BOOLEAN; k++){
                 if(value.equals(spellings[k])){
                     this.kind = k;
+                    this.value = value;
                     break;
                 }
             }
@@ -28,19 +29,19 @@ public class Token {
     }
     
     
-    public final static byte ID = 0, INT_LIT = 1, SOMA = 2, SUB = 3, MULT = 4,
-            DIV = 5, MAIORQ = 6, MAIOR_IGUAL = 7, MENOR_IGUAL = 8, DIF = 9,
-            MENORQ = 10, LBRACKET = 11, RBRACKET = 12, PONTO_VG = 13,
-            ATRIBUICAO = 14, DOIS_PONTOS = 15, LPAREN = 16, RPAREN = 17, 
-            PONTO_PONTO = 18, PONTO = 19, VIRG = 20, BEGIN  = 21, END = 22, 
-            IF = 23, THEN = 24, ELSE = 25, VAR = 26, WHILE = 27, DO = 28,
-            OR = 29, AND = 30, PROGRAM = 31, ARRAY = 32, OF = 33, INTEGER = 34,
-            REAL = 35,TRUE= 36, FALSE = 37, BOOLEAN = 36, EOF = 39, ERRO = 40;
+    public final static byte ID = 0, INT_LIT = 1,FLOAT_LIT = 2, SOMA = 3, SUB = 4, MULT = 5,
+            DIV = 5, MAIORQ = 7, MAIOR_IGUAL = 8, MENOR_IGUAL = 9, DIF = 10,
+            MENORQ = 11, LBRACKET = 12, RBRACKET = 13, PONTO_VG = 14,
+            ATRIBUICAO = 15, DOIS_PONTOS = 16, LPAREN = 17, RPAREN = 18, 
+            PONTO_PONTO = 19, PONTO = 20, VIRG = 21, BEGIN  = 22, END = 23, 
+            IF = 24, THEN = 25, ELSE = 26, VAR = 27, WHILE = 28, DO = 29,
+            OR = 30, AND = 31, PROGRAM = 32, ARRAY = 33, OF = 34, INTEGER = 35,
+            REAL = 36,TRUE= 37, FALSE = 38, BOOLEAN = 39, EOF = 40, ERRO = 41;
     
     private final static String[] spellings = {
-        "<id>", "<int_lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", ">",
+        "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", ">",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
         "then", "else", "var","while", "do", "or", "and", "program", "array",
-        "of", "integer", "real","true","false", "boolean", "<EOF>"
+        "of", "integer", "real","true","false", "boolean", "<EOF>", "<ERRO>"
     };
 }
