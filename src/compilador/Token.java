@@ -8,13 +8,13 @@ public class Token {
     
     public Token(byte kind, String value, int line, int col){
         this.kind = kind;
-        this.value = spellings[kind]; //value;
+        this.value = SPELLINGS[kind]; //value;
         this.line = line;
         this.col = col;
         
         if(kind == ID){
             for(byte k = BEGIN;k <= BOOLEAN; k++){
-                if(value.equals(spellings[k])){
+                if(value.equals(SPELLINGS[k])){
                     this.kind = k;
                     this.value = value;
                     break;
@@ -38,7 +38,7 @@ public class Token {
             OR = 30, AND = 31, PROGRAM = 32, ARRAY = 33, OF = 34, INTEGER = 35,
             REAL = 36,TRUE= 37, FALSE = 38, BOOLEAN = 39, EOF = 40, ERRO = 41;
     
-    private final static String[] spellings = {
+    private final static String[] SPELLINGS = {
         "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", ">",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
         "then", "else", "var","while", "do", "or", "and", "program", "array",
