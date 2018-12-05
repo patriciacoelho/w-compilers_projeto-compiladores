@@ -1,15 +1,15 @@
-package compilador;
+package compiler;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Compilador {
+public class Compiler {
     public static void main(String[] args) throws Exception {
         // TODO code application logic here
         //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        String file = "src/programa.pas";
-        try (BufferedReader arquivo = new BufferedReader(new FileReader(file))) {
-            Scanner scanner = new Scanner(arquivo);
+        String filename = "src/programa.pas";
+        try (BufferedReader file = new BufferedReader(new FileReader(filename))) {
+            Scanner scanner = new Scanner(file);
             Token tk;
             do{
                 tk = scanner.scan();

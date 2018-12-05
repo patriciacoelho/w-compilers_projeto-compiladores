@@ -1,31 +1,31 @@
-package compilador;
+package compiler;
 
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
 
 public class Scanner {
-    final private BufferedReader arquivo;
+    final private BufferedReader file;
     private char currentChar; 
-    private int linha;
+    private int line;
     private int col,aux;
     private byte currentKind;
     private StringBuffer currentValue;
 
        
-    Scanner(BufferedReader arquivo)throws Exception{
-        this.arquivo = arquivo;
-        currentChar = (char)arquivo.read(); //TO DO : pegar primeiro caractere do txt
+    Scanner(BufferedReader file)throws Exception{
+        this.file = file;
+        currentChar = (char)file.read(); //TO DO : pegar primeiro caractere do txt
         //System.out.println(currentChar);
         //System.out.println("valor corrente = "+currentValue);
         col=0;
-        linha=1;
+        line=1;
     }
     
     private void take(char expectedChar) throws Exception{
         if(currentChar == expectedChar){
             currentValue.append(currentChar);
-            currentChar = (char)arquivo.read(); //currentChar = proximo caractere;
+            currentChar = (char)file.read(); //currentChar = proximo caractere;
             //System.out.println(currentChar);
         } else {
             //retorna token erro
@@ -34,7 +34,7 @@ public class Scanner {
     
     private void takeIt() throws Exception{
         currentValue.append(currentChar);
-        currentChar = (char)arquivo.read(); //currentChar = proximo caractere;
+        currentChar = (char)file.read(); //currentChar = proximo caractere;
         //System.out.println(currentChar);
         
         col++;
@@ -83,7 +83,7 @@ public class Scanner {
         if(currentChar == '+'){
             takeIt();
             aux = col;
-            return Token.SOMA;
+            return Token.SUM;
         }
         if(currentChar == '-'){
             takeIt();
@@ -105,9 +105,9 @@ public class Scanner {
             aux = col;
             if(currentChar == '='){
                 takeIt();
-                return Token.MAIOR_IGUAL;
+                return Token.GREATER_EQUAL;
             } else{
-                return Token.MAIORQ;
+                return Token.GREATER;
             }
         }
         if(currentChar == '<'){ // leitura de < <= <>
@@ -115,12 +115,12 @@ public class Scanner {
             aux = col;
             if(currentChar == '='){
                 takeIt();
-                return Token.MENOR_IGUAL;
+                return Token.LESSER_EQUAL;
             } else if(currentChar == '>'){
                     takeIt();
-                    return Token.DIF;
+                    return Token.DIFF;
             } else {
-                return Token.MENORQ;
+                return Token.LESSER;
              
             }        
         }
@@ -137,16 +137,16 @@ public class Scanner {
         if(currentChar == ';'){
             takeIt();
             aux = col;
-            return Token.PONTO_VG;
+            return Token.SEMICOLON;
         }
         if(currentChar == ':'){
             takeIt();
             aux = col;
             if(currentChar == '='){
                 takeIt();
-                return Token.ATRIBUICAO;
+                return Token.BECOMES;
             } else{
-                return Token.DOIS_PONTOS;
+                return Token.COLON;
             }
         }
         if(currentChar == '('){
@@ -164,7 +164,7 @@ public class Scanner {
             aux = col;
             if(currentChar == '.'){
                 takeIt();
-                return Token.PONTO_PONTO;
+                return Token.DOUBLE_DOT;
             } else {
                 if(isDigit(currentChar)){
                     takeIt();
@@ -173,7 +173,7 @@ public class Scanner {
                     }
                     return Token.FLOAT_LIT;
                 } else{
-                    return Token.PONTO;
+                    return Token.DOT;
                 }
                 
             }
@@ -181,7 +181,7 @@ public class Scanner {
         if(currentChar == ','){
             takeIt();
             aux = col;
-            return Token.VIRG;
+            return Token.COMMA;
         }
         if(currentChar == 65535){ //SYMBOL DO EOF REAL
             takeIt();
@@ -192,7 +192,7 @@ public class Scanner {
         //System.out.println((int)currentChar);
         //System.out.println("o vilão está acima");
         takeIt();
-        return Token.ERRO;
+        return Token.ERROR;
        
         
         //TO DO : return erro
@@ -207,12 +207,12 @@ public class Scanner {
                     takeIt();
                 }
                 take('\n');
-                linha++;
+                line++;
                 col=0;
             }
             break;
             case '\n':
-                linha++;
+                line++;
                 col=-1;
             case ' ':
             case 13:
@@ -230,7 +230,7 @@ public class Scanner {
         }
         currentValue = new StringBuffer("");
         currentKind = scanToken();
-        return new Token(currentKind, currentValue.toString(), linha, aux); //TO DO : add linha e coluna
+        return new Token(currentKind, currentValue.toString(), line, aux); //TO DO : add linha e coluna
     }
     
     public ArrayList<Token> ler() throws Exception{
