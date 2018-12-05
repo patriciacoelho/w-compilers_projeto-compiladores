@@ -200,7 +200,7 @@ public class Scanner {
     
     private void scanSeparator() throws Exception{ //Revisar simbolos
         switch(currentChar){
-            case '!':{ //marcação de linha de comentário assim como esse //
+            case '#':{ //marcação de linha de comentário assim como esse //
                 takeIt();
                 aux = col;
                 while(isGraphic(currentChar)){
@@ -223,7 +223,8 @@ public class Scanner {
     }
     
     public Token scan() throws Exception{
-        while(currentChar == '!' || currentChar == ' ' || currentChar == '\n' || currentChar == 13 || currentChar == '\t' || currentChar == 10){
+        currentValue = new StringBuffer("");
+        while(currentChar == '#' || currentChar == ' ' || currentChar == '\n' || currentChar == 13 || currentChar == '\t' || currentChar == 10){
             //System.out.println("opa");
             //System.out.println((int)currentChar);
             scanSeparator();

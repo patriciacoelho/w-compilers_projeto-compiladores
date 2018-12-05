@@ -1,7 +1,5 @@
-var uesley := 2 + 3
-begin 
+#uendel
+var x:= 2 + 3
+true
 .
-
-true 
-false
-array[1. .. .2]
+array[1..5]

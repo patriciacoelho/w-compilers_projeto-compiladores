@@ -16,7 +16,7 @@ public class Token {
             for(byte k = BEGIN;k <= BOOLEAN; k++){
                 if(value.equals(SPELLINGS[k])){
                     this.kind = k;
-                    this.value = value;
+                    this.value = SPELLINGS[k];
                     break;
                 }
             }
@@ -24,8 +24,9 @@ public class Token {
         
     }
     
-    public void imprimir(){
-        System.out.println(value+" "+kind+" "+line+" "+col+" ");
+    @Override
+    public String toString(){
+        return value+" "+kind+" "+line+" "+col;
     }
     
     

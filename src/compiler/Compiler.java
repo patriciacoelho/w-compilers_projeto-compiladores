@@ -13,7 +13,7 @@ public class Compiler {
             Token tk;
             do{
                 tk = scanner.scan();
-                tk.imprimir();
+            System.out.println(tk.toString());
             }while(tk.kind != Token.EOF);
         }
     }
