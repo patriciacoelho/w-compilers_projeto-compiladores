@@ -229,7 +229,7 @@ public class Scanner {
             //System.out.println((int)currentChar);
             scanSeparator();
         }
-        currentValue = new StringBuffer("");
+        currentValue.delete(0,currentValue.length());
         currentKind = scanToken();
         return new Token(currentKind, currentValue.toString(), line, aux); //TO DO : add linha e coluna
     }
