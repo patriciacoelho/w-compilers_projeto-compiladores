@@ -20,6 +20,11 @@ public class InterfaceController {
 	
 	
 	@FXML
+	private void initialize() {
+		txtOutput.setEditable(false);
+	}
+	
+	@FXML
 	private void handleRun(ActionEvent event) throws Exception {
 		ArrayList<Token> lexicalProgram;
 		Scanner scanner = new Scanner(txtPrograma.getText());
@@ -37,5 +42,18 @@ public class InterfaceController {
 		
 		
 	}
+	
+	@FXML
+	private void handleClose() {
+		System.exit(0);
+	}
+	
+	@FXML
+	private void handleLoad() {
+		//
+	}
+	
+	
+	
 	
 }
