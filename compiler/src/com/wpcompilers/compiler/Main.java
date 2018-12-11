@@ -16,7 +16,8 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Parent fxmlGUICompiler = FXMLLoader.load(getClass().getResource("view/interface.fxml"));
     	frontPage = new Scene(fxmlGUICompiler);
-
+    	
+    	primaryStage.setTitle("Well Played Compiler");
     	primaryStage.setScene(frontPage);
     	primaryStage.show();
 	}

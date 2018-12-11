@@ -203,7 +203,6 @@ public class Scanner {
         //TO DO : LER O EOF e o float-lit
         //System.out.println((int)currentChar);
         //System.out.println("o vilão está acima");
-        System.out.print((int)currentChar);
         takeIt();
         return Token.ERROR;
        

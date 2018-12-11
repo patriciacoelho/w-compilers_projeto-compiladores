@@ -41,7 +41,7 @@ public class Token {
             REAL = 36,TRUE= 37, FALSE = 38, BOOLEAN = 39, EOF = 40, ERROR = 41;
     
     private final static String[] SPELLINGS = {
-        "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", ">",
+        "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", "<",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
         "then", "else", "var","while", "do", "or", "and", "program", "array",
         "of", "integer", "real","true","false", "boolean", "<EOF>", "<ERRO>"
