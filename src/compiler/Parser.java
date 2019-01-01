@@ -8,49 +8,56 @@ public class Parser {
 		if (currentToken.kind == expectedKind)
 			currentToken = scanner.scan();
 		// else
-			// erro sintatico
+			// erro sintatico, esperava 'expectedKind'
 	}
 
 	private void acceptIt () throws Exception {
 		currentToken = scanner.scan();
 	}
 
-	// Parsing Methods
+
+	///////////////////////////////////////////////////////////////////////////////
+	//
+	//PARSING METHODS
+	//
+	///////////////////////////////////////////////////////////////////////////////
+
 	private void parsePrograma() throws Exception {
 		// program <id> ; <corpo> .
+		currentToken = scanner.scan();
 		if (currentToken.kind == Token.PROGRAM) {
 			acceptIt();
 			accept(Token.ID);
 			accept(Token.SEMICOLON);
 			parseCorpo();
 			accept(Token.DOT);
+			if (currentToken.kind != Token.EOF) {
+				//erro conteudo apos final de programa
+			}
+		 } else {
+			 //erro não inicia com 'program'
 		 }
 	}
 
 	private void parseCorpo() throws Exception {
-		// <corpo> ::= <declarações> <comando-composto
-		parseDeclaracoes();
+		// <corpo> ::= <declarações> <comando-composto>
+		while(currentToken.kind == Token.VAR){
+			//  <declarações> ::= <declaração> ; | <declarações> <declaração> ;	| <vazio>
+			parseDeclaracao();
+			accept(Token.SEMICOLON);
+		}
 		parseComandoComposto();
 	}
 
-	private void parseDeclaracoes() throws Exception {
-		//  <declarações> ::= <declaração> ; | <declarações> <declaração> ;	| <vazio>
-		parseDeclaracao();
-		accept(Token.COMMA);
-	}
-
 	private void parseDeclaracao() throws Exception {
-		// <declaração> ::= <declaração-de-variável>
-		parseDeclaracaoDeVariavel();
-	}
-
-	private void parseDeclaracaoDeVariavel() throws Exception {
-		// <declaração-de-variável> ::= var <lista-de-ids> : <tipo>
+		// <declaração> ::= <declaração-de-variável> ::= var <lista-de-ids> : <tipo>
 		if (currentToken.kind == Token.VAR) {
 			acceptIt();
 			parseListaDeIds();
 			accept(Token.COLON);
 			parseTipo();
+		 } else {
+			 // erro, declaração não inicia com 'Var'
 		 }
 	}
 
@@ -58,33 +65,43 @@ public class Parser {
 		// <lista-de-ids> ::= <id>	| <lista-de-ids> , <id>
 		if (currentToken.kind == Token.ID) {
 			acceptIt();
+		} else {
+			// erro, nenhum id identificado
 		}
 		while(currentToken.kind == Token.COMMA){
 			acceptIt();
 			if (currentToken.kind == Token.ID) {
 				acceptIt();
 			} else{
-				//erro
+				//erro, esperava id após a virgula
 			}
 		}
 	}
 
 	private void parseTipo() throws Exception {
-		if (currentToken.kind == Token.ARRAY) {
+		switch(currentToken.kind){
+		case Token.ARRAY: {
 			// <tipo-agregado> ::= array [ <literal> .. <literal> ] of <tipo>
-			acceptIt();
-			accept(Token.LBRACKET);
-			parseLiteral();
-			accept(Token.DOUBLE_DOT);
-			parseLiteral();
-			accept(Token.RBRACKET);
-			accept(Token.OF);
-			parseTipo();
-		 }
-		if (currentToken.kind == Token.INTEGER || currentToken.kind == Token.REAL || currentToken.kind == Token.BOOLEAN) {
+				acceptIt();
+				accept(Token.LBRACKET);
+				parseLiteral();
+				accept(Token.DOUBLE_DOT);
+				parseLiteral();
+				accept(Token.RBRACKET);
+				accept(Token.OF);
+				parseTipo();
+			}
+			break;
+		case Token.INTEGER:
+		case Token.REAL:
+		case Token.BOOLEAN: {
 			// <tipo-simples> ::= integer | real | boolean
-			acceptIt();
-		 }
+				acceptIt();
+			}
+			break;
+		default:
+			// erro, esperava um tipo válido
+		}
 	}
 
 	private void parseLiteral() throws Exception {
@@ -92,9 +109,12 @@ public class Parser {
 		if (currentToken.kind == Token.TRUE || currentToken.kind == Token.FALSE
 			|| currentToken.kind == Token.INT_LIT || currentToken.kind == Token.FLOAT_LIT)
 			acceptIt();
-
+		else {
+			// erro, esperava um literal
+		}
 	}
 
+	// Revisar a partir daqui
 	private void parseComandoComposto() throws Exception {
 		//begin <lista-de-comandos> end
 		if (currentToken.kind == Token.BEGIN) {
