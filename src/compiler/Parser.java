@@ -158,7 +158,50 @@ public class Parser {
 	}
 
 	private void parseExpressao() {
-		// ...
+		// <expressão> ::= <expressão-simples> | <expressão-simples> <op-rel> <expressão-simples>,
+		// <op-rel> ::= < | > | <=	| >= | = | <>
+		parseExpressaoSimples();
+		if(currentToken.kind == Token.GREATER || currentToken.kind == Token.LESSER || currentToken.kind == Token.LESSER_EQUAL
+				|| currentToken.kind == Token.GREATER_EQUAL || currentToken.kind == Token.DIFF || currentToken.kind == Token.EQUAL){
+			acceptIt();
+			parseExpressaoSimples();
+		}
+
+
+
+	}
+
+	private void parseExpressaoSimples() {
+		// <expressão-simples> ::= <expressão-simples> <op-ad> <termo> | <termo>, <op-ad> ::= + | - | or
+		parseTermo();
+		if(currentToken.kind == Token.SUM || currentToken.kind == Token.SUB || currentToken.kind == Token.OR){
+			acceptIt();
+			parseTermo();
+		}
+
+	}
+
+	private void parseTermo() {
+		// <termo> ::= <termo> <op-mul> <fator> | <fator> , <op-mul> ::= *	| / | and
+		parseFator();
+		if(currentToken.kind == Token.MULT || currentToken.kind == Token.DIV || currentToken.kind == Token.AND) {
+			acceptIt();
+			parseFator();
+		}
+	}
+
+	private void parseFator() {
+		//<fator> ::= <variável>	| <literal> | "(" <expressão> ")"
+		if(currentToken.kind == Token.ID)
+			parseVariavel();
+		if (currentToken.kind == Token.TRUE || currentToken.kind == Token.FALSE
+				|| currentToken.kind == Token.INT_LIT || currentToken.kind == Token.FLOAT_LIT)
+			parseLiteral();
+		if(currentToken.kind == Token.LPAREN) {
+			acceptIt();
+			parseExpressao();
+			accept(Token.RPAREN);
+		}
 	}
 
 	public void parse () {
