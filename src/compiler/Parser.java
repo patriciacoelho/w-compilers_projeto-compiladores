@@ -4,47 +4,47 @@ public class Parser {
 	private Token currentToken;
 	private Scanner scanner;
 
-	private void accept (byte expectedKind) {
+	private void accept (byte expectedKind) throws Exception {
 		if (currentToken.kind == expectedKind)
 			currentToken = scanner.scan();
 		// else
 			// erro sintatico
 	}
 
-	private void acceptIt () {
+	private void acceptIt () throws Exception {
 		currentToken = scanner.scan();
 	}
 
 	// Parsing Methods
-	private void parsePrograma() {
+	private void parsePrograma() throws Exception {
 		// program <id> ; <corpo> .
 		if (currentToken.kind == Token.PROGRAM) {
 			acceptIt();
-			parseId();
+			accept(Token.ID);
 			accept(Token.SEMICOLON);
 			parseCorpo();
 			accept(Token.DOT);
 		 }
 	}
 
-	private void parseCorpo() {
+	private void parseCorpo() throws Exception {
 		// <corpo> ::= <declarações> <comando-composto
 		parseDeclaracoes();
 		parseComandoComposto();
 	}
 
-	private void parseDeclaracoes() {
+	private void parseDeclaracoes() throws Exception {
 		//  <declarações> ::= <declaração> ; | <declarações> <declaração> ;	| <vazio>
 		parseDeclaracao();
 		accept(Token.COMMA);
 	}
 
-	private void parseDeclaracao() {
+	private void parseDeclaracao() throws Exception {
 		// <declaração> ::= <declaração-de-variável>
 		parseDeclaracaoDeVariavel();
 	}
 
-	private void parseDeclaracaoDeVariavel() {
+	private void parseDeclaracaoDeVariavel() throws Exception {
 		// <declaração-de-variável> ::= var <lista-de-ids> : <tipo>
 		if (currentToken.kind == Token.VAR) {
 			acceptIt();
@@ -54,13 +54,22 @@ public class Parser {
 		 }
 	}
 
-	private void parseListaDeIds(){
+	private void parseListaDeIds() throws Exception {
 		// <lista-de-ids> ::= <id>	| <lista-de-ids> , <id>
-		parseId();
-		accept(Token.COMMA);
+		if (currentToken.kind == Token.ID) {
+			acceptIt();
+		}
+		while(currentToken.kind == Token.COMMA){
+			acceptIt();
+			if (currentToken.kind == Token.ID) {
+				acceptIt();
+			} else{
+				//erro
+			}
+		}
 	}
 
-	private void parseTipo(){
+	private void parseTipo() throws Exception {
 		if (currentToken.kind == Token.ARRAY) {
 			// <tipo-agregado> ::= array [ <literal> .. <literal> ] of <tipo>
 			acceptIt();
@@ -78,7 +87,7 @@ public class Parser {
 		 }
 	}
 
-	private void parseLiteral(){
+	private void parseLiteral() throws Exception {
 		//<literal> ::= <bool-lit> | <int-lit> | <float-lit>
 		if (currentToken.kind == Token.TRUE || currentToken.kind == Token.FALSE
 			|| currentToken.kind == Token.INT_LIT || currentToken.kind == Token.FLOAT_LIT)
@@ -86,7 +95,7 @@ public class Parser {
 
 	}
 
-	private void parseComandoComposto() {
+	private void parseComandoComposto() throws Exception {
 		//begin <lista-de-comandos> end
 		if (currentToken.kind == Token.BEGIN) {
 			acceptIt();
@@ -95,13 +104,13 @@ public class Parser {
 		 }
 	}
 
-	private void parseListaDeComandos() {
+	private void parseListaDeComandos() throws Exception {
 		// <lista-de-comandos> ::=	<comando> ; | <lista-de-comandos> <comando> ; | <vazio>
 		parseComando();
 		accept(Token.SEMICOLON);
 	}
 
-	private void parseComando() {
+	private void parseComando() throws Exception {
 		switch(currentToken.kind){
 		case Token.ID: { //atribuicao
 			// <atribuição> ::= <variável> := <expressão>
@@ -139,7 +148,7 @@ public class Parser {
 		}
 	}
 
-	private void parseVariavel() {
+	private void parseVariavel() throws Exception {
 		// <variável> ::=	<id> <seletor>
 		if(currentToken.kind == Token.ID){
 			acceptIt();
@@ -148,7 +157,7 @@ public class Parser {
 	}
 
 
-	private void parseSeletor() {
+	private void parseSeletor() throws Exception {
 		// <seletor> ::= <seletor> "[" <expressão> "]" | "[" <expressão> "]" | <vazio>
 		if(currentToken.kind == Token.LBRACKET) {
 			acceptIt();
@@ -157,12 +166,12 @@ public class Parser {
 		}
 	}
 
-	private void parseExpressao() {
+	private void parseExpressao() throws Exception {
 		// <expressão> ::= <expressão-simples> | <expressão-simples> <op-rel> <expressão-simples>,
 		// <op-rel> ::= < | > | <=	| >= | = | <>
 		parseExpressaoSimples();
-		if(currentToken.kind == Token.GREATER || currentToken.kind == Token.LESSER || currentToken.kind == Token.LESSER_EQUAL
-				|| currentToken.kind == Token.GREATER_EQUAL || currentToken.kind == Token.DIFF || currentToken.kind == Token.EQUAL){
+		if(currentToken.kind == Token.GREATER || currentToken.kind == Token.LESS || currentToken.kind == Token.LESS_EQUAL
+				|| currentToken.kind == Token.GREATER_EQUAL || currentToken.kind == Token.NOT_EQUAL || currentToken.kind == Token.EQUAL){
 			acceptIt();
 			parseExpressaoSimples();
 		}
@@ -171,7 +180,7 @@ public class Parser {
 
 	}
 
-	private void parseExpressaoSimples() {
+	private void parseExpressaoSimples() throws Exception {
 		// <expressão-simples> ::= <expressão-simples> <op-ad> <termo> | <termo>, <op-ad> ::= + | - | or
 		parseTermo();
 		if(currentToken.kind == Token.SUM || currentToken.kind == Token.SUB || currentToken.kind == Token.OR){
@@ -181,7 +190,7 @@ public class Parser {
 
 	}
 
-	private void parseTermo() {
+	private void parseTermo() throws Exception {
 		// <termo> ::= <termo> <op-mul> <fator> | <fator> , <op-mul> ::= *	| / | and
 		parseFator();
 		if(currentToken.kind == Token.MULT || currentToken.kind == Token.DIV || currentToken.kind == Token.AND) {
@@ -190,7 +199,7 @@ public class Parser {
 		}
 	}
 
-	private void parseFator() {
+	private void parseFator() throws Exception {
 		//<fator> ::= <variável>	| <literal> | "(" <expressão> ")"
 		if(currentToken.kind == Token.ID)
 			parseVariavel();
@@ -204,10 +213,10 @@ public class Parser {
 		}
 	}
 
-	public void parse () {
+	public void parse () throws Exception {
 		currentToken = scanner.scan();
-//		Program progAST = parseProgram();
-//		parseProgram();
+//		Program progAST = parsePrograma();
+		parsePrograma();
 		// if (currentToken.kind != Token.EOF)
 			// erro sintatico
 		// return progAST;

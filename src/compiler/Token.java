@@ -39,7 +39,6 @@ public class Token {
             OR = 30, AND = 31, PROGRAM = 32, ARRAY = 33, OF = 34, INTEGER = 35,
             REAL = 36,TRUE= 37, FALSE = 38, BOOLEAN = 39, EOF = 40, ERROR = 41, EQUAL = 42;
 
-    // <op-rel> ::= < | > | <=	| >= | = | <>
     private final static String[] SPELLINGS = {
         "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", "<",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
