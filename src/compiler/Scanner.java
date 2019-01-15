@@ -62,10 +62,11 @@ public class Scanner {
             return Token.ID;
         }
         if(isDigit(currentChar)){ //<digito><digito>*
-            do{ 
+            takeIt();
+            aux = col;
+            while(isDigit(currentChar)){ 
                 takeIt();
-                aux = col;
-            }while(isDigit(currentChar));
+            }
             if(currentChar == '.'){
                 takeIt();
                 if(isDigit(currentChar)){
@@ -115,12 +116,12 @@ public class Scanner {
             aux = col;
             if(currentChar == '='){
                 takeIt();
-                return Token.LESSER_EQUAL;
+                return Token.LESS_EQUAL;
             } else if(currentChar == '>'){
                     takeIt();
                     return Token.DIFF;
             } else {
-                return Token.LESSER;
+                return Token.LESS;
              
             }        
         }

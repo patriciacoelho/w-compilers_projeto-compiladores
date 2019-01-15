@@ -1,5 +1,9 @@
-#uendel
-var x:= 2 + 3
-true
+program uendel; 
+    var x : integer;
+    var y2 : real;
+
+begin
+    x := 1;
+
+end
 .
-array[1..5]

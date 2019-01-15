@@ -11,6 +11,8 @@ public class Compiler {
         try (BufferedReader file = new BufferedReader(new FileReader(filename))) {
             Scanner scanner = new Scanner(file);
             Token tk;
+            Parser p = new Parser(scanner);
+            p.parse();
             do{
                 tk = scanner.scan();
             System.out.println(tk.toString());
