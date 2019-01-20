@@ -13,10 +13,10 @@ public class Compiler {
             Token tk;
             Parser p = new Parser(scanner);
             p.parse();
-            do{
+            /*do{
                 tk = scanner.scan();
             System.out.println(tk.toString());
-            }while(tk.kind != Token.EOF);
+            }while(tk.kind != Token.EOF); */
         }
     }
     

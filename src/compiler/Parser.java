@@ -2,6 +2,7 @@ package compiler;
 
 public class Parser {
 	private Token currentToken;
+        private Token lastToken;
 	private final Scanner scanner;
 
         Parser(Scanner scanner) throws Exception{
@@ -15,13 +16,14 @@ public class Parser {
         
 	private void accept (byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
-                  
+                        lastToken = currentToken;
 			currentToken = scanner.scan();
                 }
                 else {
 			// erro sintatico, esperava 'expectedKind'
                         System.out.println("erro sintatico");
-                        System.out.println("Esperava encontrar "+ Token.SPELLINGS[expectedKind]+" no lugar de "+currentToken.value+"\n linha:" + currentToken.line+ "\n col:"+currentToken.col);
+                        System.out.println("Esperava encontrar "+ Token.SPELLINGS[expectedKind]+"\n linha:" + lastToken.line+ "\n col:"+lastToken.col);
+                        System.exit(1);
                 }
 	}
 
@@ -52,20 +54,22 @@ public class Parser {
         
         private void parseComando() throws Exception {
 		switch(currentToken.kind){
-		case Token.ID: //atribuicao
-                    parseAtribuicao();
-		break;
-		case Token.IF:  //condicional
-                    parseCondicional();
-		break;
-		case Token.WHILE: 	//iterativo
-                     parseIterativo();
-                break;
-		case Token.BEGIN: 
-                    parseComandoComposto();
-		break;
-		default:
+                    case Token.ID: //atribuicao
+                        parseAtribuicao();
+                    break;
+                    case Token.IF:  //condicional
+                        parseCondicional();
+                    break;
+                    case Token.WHILE: 	//iterativo
+                        parseIterativo();
+                    break;
+                    case Token.BEGIN: 
+                        parseComandoComposto();
+                    break;
+                    default:
 			//Error
+                        System.out.println("Unexpected Symbol = "+currentToken.value);
+                        System.exit(1);
 		}
 	}
         
@@ -201,6 +205,7 @@ public class Parser {
                 accept(Token.SEMICOLON);
                 parseCorpo();
                 accept(Token.DOT);
+                accept(Token.EOF);
 	}
 
 	private void parseSeletor() throws Exception {

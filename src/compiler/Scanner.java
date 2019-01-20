@@ -49,7 +49,12 @@ public class Scanner {
     }
     
     private boolean isGraphic(char c){
-        return c >= 32 && c<= 126;
+        boolean x = (c >= 32 && c<= 126);
+        boolean y = false;
+        if(c == 'ç' || c == '~'){
+                y = true;
+        }
+        return x || y;
     }
     
     private byte scanToken() throws Exception{
@@ -189,6 +194,11 @@ public class Scanner {
             aux = col;
             return Token.EOF;
         }
+        if(currentChar == '='){
+            takeIt();
+            aux = col;
+            return Token.EQUAL;
+        }
         //TO DO : LER O EOF e o float-lit
         //System.out.println((int)currentChar);
         //System.out.println("o vilão está acima");
@@ -206,10 +216,11 @@ public class Scanner {
                 aux = col;
                 while(isGraphic(currentChar)){
                     takeIt();
+                    
                 }
                 take('\n');
-                line++;
-                col=0;
+                //line++;
+                col=-1;
             }
             break;
             case '\n':
