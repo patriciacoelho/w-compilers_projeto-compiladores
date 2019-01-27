@@ -137,7 +137,7 @@ public class Parser {
 		// <corpo> ::= <declaraes> <comando-composto>
                 //System.out.println("Parse Corpo");
                 Corpo body = new Corpo();
-                body.d = parseDeclaracoes();
+                body.declarations = parseDeclaracoes();
                 body.compositeCommand = parseComandoComposto();
                 return body;
 	}

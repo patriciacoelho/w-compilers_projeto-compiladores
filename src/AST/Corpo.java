@@ -10,7 +10,7 @@ package AST;
  * @author Uendel
  */
 public class Corpo {
-    Declaracao d;
-    ComandoComposto compositeCommand;
+    public Declaracoes declarations;
+    public ComandoComposto compositeCommand;
     
 }

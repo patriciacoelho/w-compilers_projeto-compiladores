@@ -10,7 +10,7 @@ package AST;
  *
  * @author Uendel
  */
-public class Atribuicao {
+public class Atribuicao extends Comando{
     public Variavel variable;
     public Expressao expression;
 }
