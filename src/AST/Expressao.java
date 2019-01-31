@@ -1,5 +1,7 @@
 package AST;
 
+import compiler.Token;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,7 +13,8 @@ package AST;
  *
  * @author Uendel
  */
-public class Expressao {
+public class Expressao extends Fator{
     public ExpressaoSimples simpleExpression;
     public ExpressaoSimples simpleExpressionR;
+    public Token operator;
 }

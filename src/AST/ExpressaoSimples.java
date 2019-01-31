@@ -5,6 +5,8 @@
  */
 package AST;
 
+import compiler.Token;
+
 /**
  *
  * @author Uendel
@@ -12,4 +14,5 @@ package AST;
 public class ExpressaoSimples {
     public Termo word;
     public ExpressaoSimples next;
+    public Token operator;
 }

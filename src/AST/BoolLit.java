@@ -11,6 +11,6 @@ import compiler.Token;
  *
  * @author Uendel
  */
-public class BoolLit {
-    public Token name;
+public class BoolLit extends Literal {
+
 }

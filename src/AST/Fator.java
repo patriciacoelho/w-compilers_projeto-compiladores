@@ -9,6 +9,7 @@ package AST;
  *
  * @author Uendel
  */
-public class ComandoComposto extends Comando{
-    public ListaDeComandos listOfCommands;
+public abstract class Fator {
+    
 }
+ 

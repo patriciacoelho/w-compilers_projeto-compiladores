@@ -5,10 +5,13 @@
  */
 package AST;
 
+import compiler.Token;
+
 /**
  *
  * @author Uendel
  */
-public class ComandoComposto extends Comando{
-    public ListaDeComandos listOfCommands;
+public class ListaDeIds {
+    public Token id;
+    public ListaDeIds next;
 }

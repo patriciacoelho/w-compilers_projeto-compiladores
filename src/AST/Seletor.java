@@ -9,6 +9,7 @@ package AST;
  *
  * @author Uendel
  */
-public class ComandoComposto extends Comando{
-    public ListaDeComandos listOfCommands;
+public class Seletor {
+    public Expressao expression;
+    public Seletor next;
 }

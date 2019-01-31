@@ -9,6 +9,7 @@ package AST;
  *
  * @author Uendel
  */
-public class ComandoComposto extends Comando{
-    public ListaDeComandos listOfCommands;
+public class TipoAgregado extends Tipo {
+    public Literal literal1, literal2;
+    public Tipo typo;
 }

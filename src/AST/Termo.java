@@ -5,10 +5,14 @@
  */
 package AST;
 
+import compiler.Token;
+
 /**
  *
  * @author Uendel
  */
-public class ComandoComposto extends Comando{
-    public ListaDeComandos listOfCommands;
+public class Termo {
+    public Fator factor;
+    public Termo next;
+    public Token operator;
 }

@@ -10,6 +10,6 @@ package AST;
  * @author Uendel
  */
 public class DeclaracaoDeVariavel {
-    public ListaDeIds li;
-    public Tipo t;
+    public ListaDeIds listOfIds;
+    public Tipo type;
 }

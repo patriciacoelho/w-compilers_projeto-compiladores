@@ -11,7 +11,7 @@ import compiler.Token;
  *
  * @author Uendel
  */
-public class Variavel {
+public class Variavel extends Fator{
     public Token id;
     public Seletor selector;
 }
