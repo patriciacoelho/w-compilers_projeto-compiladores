@@ -11,8 +11,17 @@ import AST.Declaracoes;
 import AST.Variavel;
 import AST.Expressao;
 import AST.ExpressaoSimples;
+import AST.Fator;
 import AST.Iterativo;
+import AST.ListaDeComandos;
+import AST.ListaDeIds;
+import AST.Literal;
 import AST.Programa;
+import AST.Seletor;
+import AST.Termo;
+import AST.Tipo;
+import AST.TipoAgregado;
+import AST.TipoSimples;
 
 public class Parser {
 	private Token currentToken;
@@ -111,7 +120,7 @@ public class Parser {
                 //System.out.println("Parse Comando Composto ");
                 ComandoComposto compositeCommand = new ComandoComposto();
                 accept(Token.BEGIN);
-                compositeCommand.lc = parseListaDeComandos();
+                compositeCommand.listOfCommands = parseListaDeComandos();
                 accept(Token.END);
                 
                 return compositeCommand;
@@ -146,9 +155,9 @@ public class Parser {
             //System.out.println("Parse declaracao de variavel ");
             DeclaracaoDeVariavel variableDeclaration = new DeclaracaoDeVariavel();
             accept(Token.VAR);
-            variableDeclaration.li = parseListaDeIds();
+            variableDeclaration.listOfIds = parseListaDeIds();
             accept(Token.COLON);
-            variableDeclaration.t = parseTipo();
+            variableDeclaration.type = parseTipo();
             
             return variableDeclaration;
         }
@@ -156,24 +165,25 @@ public class Parser {
         private Declaracoes parseDeclaracoes() throws Exception{
             //System.out.println("Parse Declaracoes");
             //DeclaracaoDeVariavel dec = NULL;
-            Declaracoes first,last, d;
-            first = null;
-            last = null;
-            DeclaracaoDeVariavel dv;
+            Declaracoes declarations = null;
             while(currentToken.kind == Token.VAR){
-                d = new Declaracoes();
-                d.declarationOfVariable = parseDeclaracaoDeVariavel();
-                d.next = null;
+                Declaracoes aux = new Declaracoes();
+                aux.declarationOfVariable = parseDeclaracaoDeVariavel();
+                aux.next = null;
                 accept(Token.SEMICOLON);
                 
-                if(first==null){
-                    first = d;
-                } else { 
-                    last.next = d;
+                if( declarations == null){
+                    declarations = aux;
+                } else {
+                    Declaracoes aux2 = declarations.next;
+                    while(aux2 != null){
+                        aux2 = aux2.next;
+                    }
+                    aux2 = aux;
                 }
-                last = d;    
+                    
             }
-            return first;
+            return declarations;
         }
         
         private Expressao parseExpressao() throws Exception {
@@ -184,10 +194,11 @@ public class Parser {
 		expression.simpleExpression = parseExpressaoSimples();
 		if(currentToken.kind == Token.GREATER || currentToken.kind == Token.LESS || currentToken.kind == Token.LESS_EQUAL
 				|| currentToken.kind == Token.GREATER_EQUAL || currentToken.kind == Token.DIFF || currentToken.kind == Token.EQUAL){
-			acceptIt();
+			expression.operator = currentToken;
+                        acceptIt();
 			expression.simpleExpressionR = parseExpressaoSimples();
 		} else{
-                    expression.simpleExpressionR = parseExpressaoSimples();
+                    expression.simpleExpressionR = null;
                 }
                 
                 return expression;
@@ -196,41 +207,62 @@ public class Parser {
         private ExpressaoSimples parseExpressaoSimples() throws Exception {
 		// <expresso-simples> ::= <expresso-simples> <op-ad> <termo> | <termo>, <op-ad> ::= + | - | or
                 //System.out.println("Parse Expressao Simples");
-                
-		parseTermo();
+                ExpressaoSimples simpleExpression = new ExpressaoSimples();
+		simpleExpression.word = parseTermo();
+                simpleExpression.next = null;
                 
                 
                 
 		while(currentToken.kind == Token.SUM || currentToken.kind == Token.SUB || currentToken.kind == Token.OR){
-			acceptIt();
-			parseTermo();
+			ExpressaoSimples aux = new ExpressaoSimples();
+                        aux.operator = currentToken;
+                        acceptIt();
+                       
+			aux.word = parseTermo();
+                        aux.next = null;
+                        
+                       
+                        if(simpleExpression.next == null){
+                            simpleExpression.next = aux;
+                        } else{
+                            ExpressaoSimples aux2 = simpleExpression.next;
+                            while(aux2 != null){
+                                aux2 = aux2.next;
+                            }
+                            aux2 = aux;
+                        }
 		}
+                
+                return simpleExpression;
 
 	}
         
-        private void parseFator() throws Exception {
+        private Fator parseFator() throws Exception {
 		//<fator> ::= <varivel>	| <literal> | "(" <expresso> ")"
                 //System.out.println("Parse Fator");
+                Fator factor;
                 switch(currentToken.kind){
                     case Token.ID:
-                        parseVariavel();
+                        factor = parseVariavel();
                     break;
                     case Token.TRUE:
                     case Token.FALSE:
                     case Token.INT_LIT:
                     case Token.FLOAT_LIT:
-                        parseLiteral();
+                        factor = parseLiteral();
                     break;
                     case Token.LPAREN:
                         acceptIt();
-                        parseExpressao();
+                        factor = parseExpressao();
                         accept(Token.RPAREN);
                     break;
                     default:
+                        factor = null;
                         System.out.println("Erro");
                         System.exit(1);
                         
                 }
+                return factor;
 	}
         
         private Iterativo parseIterativo() throws Exception{
@@ -244,43 +276,80 @@ public class Parser {
             return iterative;
         }
         
-        private void parseListaDeComandos() throws Exception {
+        private ListaDeComandos parseListaDeComandos() throws Exception {
 		// <lista-de-comandos> ::=	<comando> ; | <lista-de-comandos> <comando> ; | <vazio>
                 //System.out.println("Parse Lista de comandos");
+                ListaDeComandos listOfCommands = null;
 		while(currentToken.kind==Token.ID || currentToken.kind==Token.IF || currentToken.kind==Token.WHILE || currentToken.kind==Token.BEGIN){
-                    parseComando();
+                    ListaDeComandos aux = new ListaDeComandos();
+                    aux.command = parseComando();
+                    aux.next = null;
                     accept(Token.SEMICOLON);
+                    
+                    if(listOfCommands == null){
+                        listOfCommands = aux;
+                    } else {
+                        ListaDeComandos aux2 = listOfCommands.next;
+                        while(aux2 != null){
+                            aux2 = aux2.next;
+                        }
+                        aux2 = aux;
+                    }                
                 }
+                return listOfCommands;
 	}
         
-        private void parseListaDeIds() throws Exception {
+        private ListaDeIds parseListaDeIds() throws Exception {
 		// <lista-de-ids> ::= <id>	| <lista-de-ids> , <id>
                 //System.out.println("Parse lista de ids");
+                ListaDeIds listOfIds = new ListaDeIds();
+                listOfIds.id = currentToken;
+                listOfIds.next = null;
                 accept(Token.ID);
 		while(currentToken.kind == Token.COMMA){
-			acceptIt();
+                        acceptIt();
+                        ListaDeIds aux = new ListaDeIds();
+			aux.id = currentToken;
+                        aux.next = null;
 			accept(Token.ID);
+                        
+                        ListaDeIds aux2;
+                        if(listOfIds.next == null){
+                            listOfIds.next = aux;
+                        } else{
+                            aux2 = listOfIds.next;
+                            while(aux2 != null){
+                                aux2 = aux2.next;
+                            }
+                            aux2 = aux;
+                        }
 		}
+                return listOfIds;
 	}
         
-        private void parseLiteral() throws Exception {
+        private Literal parseLiteral() throws Exception {
 		//<literal> ::= <bool-lit> | <int-lit> | <float-lit>
                 //System.out.println("Parse literal");
+                Literal literal = new Literal();
                 switch(currentToken.kind){
                     case Token.TRUE:
                     case Token.FALSE:
-                        parseBoolLit();
+                        literal = parseBoolLit();
                     break;
                     case Token.INT_LIT:
+                        literal.name = currentToken;
                         acceptIt();
                     break;
                     case Token.FLOAT_LIT:
+                        literal.name = currentToken;
                         acceptIt();
                     break;
                     default:
+                        literal = null;
                         System.out.println("Erro");
                         System.exit(1);
                 }
+                return literal;
 	}
         
 	private Programa parsePrograma() throws Exception {
@@ -296,53 +365,93 @@ public class Parser {
                 return program;
 	}
 
-	private void parseSeletor() throws Exception {
+	private Seletor parseSeletor() throws Exception {
 		// <seletor> ::= <seletor> "[" <expresso> "]" | "[" <expresso> "]" | <vazio>
                 //System.out.println("Parse Seletor");
+                Seletor selector = null;
+               
 		while(currentToken.kind == Token.LBRACKET) {
 			acceptIt();
-			parseExpressao();
+                        Seletor aux = new Seletor();
+			aux.expression = parseExpressao();
+                        aux.next = null;
 			accept(Token.RBRACKET);
+                        
+                        if(selector == null){
+                            selector = aux;
+                        } else {
+                            Seletor aux2 = selector.next;
+                            while(aux2 != null){
+                                aux2 = aux2.next;
+                            }
+                            aux2 = aux;
+                        }
 		}
+                return selector;
 	}
         
-        private void parseTermo() throws Exception {
+        private Termo parseTermo() throws Exception {
 		// <termo> ::= <termo> <op-mul> <fator> | <fator> , <op-mul> ::= *	| / | and
                 //System.out.println("Parse Termo");
-		parseFator();
+                Termo term = new Termo();
+		term.factor = parseFator();
+                term.next = null;
 		while(currentToken.kind == Token.MULT || currentToken.kind == Token.DIV || currentToken.kind == Token.AND) {
-			acceptIt();
-			parseFator();
+			Termo aux = new Termo();
+                        aux.operator = currentToken;
+                        acceptIt();
+                        
+			aux.factor = parseFator();
+                        aux.next = null;
+                        
+                        if(term.next == null){
+                            term.next = aux;
+                        } else{
+                            Termo aux2 = term.next;
+                            while(aux2 != null){
+                                aux2 = aux2.next;
+                            }
+                            aux2 = aux;
+                        }
 		}
+                return term;
 	}
 	
-        private void parseTipo() throws Exception {
+        private Tipo parseTipo() throws Exception {
             //System.out.println("Parse Tipo");
+                Tipo typex;
 		switch(currentToken.kind){
                     case Token.ARRAY: {
 			// <tipo-agregado> ::= array [ <literal> .. <literal> ] of <tipo>
+                            TipoAgregado type = new TipoAgregado();
 				acceptIt();
 				accept(Token.LBRACKET);
-				parseLiteral();
+				type.literal1 = parseLiteral();
 				accept(Token.DOUBLE_DOT);
-				parseLiteral();
+				type.literal2 = parseLiteral();
 				accept(Token.RBRACKET);
 				accept(Token.OF);
-				parseTipo();
+				type.typo = parseTipo();
+                                typex = type;
 			}
 			break;
                     case Token.INTEGER:
                     case Token.REAL:
                     case Token.BOOLEAN: {
 			// <tipo-simples> ::= integer | real | boolean
+                                TipoSimples type = new TipoSimples();
+                                type.typo = currentToken;
 				acceptIt();
+                                typex = type;
 			}
 			break;
                     default:
+                        typex = null;
                         System.out.println("erro, esperava um tipo vlido");
                         System.exit(1);
 			// erro, esperava um tipo vlido
 		}
+                return typex;
 	}
 	
 	private Variavel parseVariavel() throws Exception {
