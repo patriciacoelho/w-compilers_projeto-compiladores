@@ -29,18 +29,18 @@ public class Parser {
 	private Scanner scanner;
 
         public Parser(){
-            
+
         }
-        
+
         public Programa parse(String fileName) throws Exception{
             Programa program;
             scanner = new Scanner(fileName);
             currentToken = this.scanner.scan();
-            System.out.println("---> Iniciando anÃ¡lise SintÃ¡tica");
+            System.out.println("---> Iniciando análise Sintática");
             program = parsePrograma();
             return program;
         }
-        
+
 	private void accept (byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
                         lastToken = currentToken;
@@ -64,7 +64,7 @@ public class Parser {
 	//PARSING METHODS
 	//
 	///////////////////////////////////////////////////////////////////////////////
-        
+
         private Atribuicao parseAtribuicao() throws Exception{
             //System.out.println("Parse Atribuicao");
             //Atribuicao == <Variavel> := <Expressao>
@@ -74,7 +74,7 @@ public class Parser {
             becomes.expression = parseExpressao();
             return becomes;
         }
-        
+
         private BoolLit parseBoolLit() throws Exception{
             //System.out.println("Parse Bool Lit");
             BoolLit logic = new BoolLit();
@@ -86,11 +86,11 @@ public class Parser {
                 break;
                 default:
                     System.out.println("Unexpected Character");
-                
+
             }
             return logic;
         }
-        
+
         private Comando parseComando() throws Exception {
                 //System.out.println("Parse Comando");
                 Comando command;
@@ -104,7 +104,7 @@ public class Parser {
                     case Token.WHILE: 	//iterativo
                         command = parseIterativo();
                     break;
-                    case Token.BEGIN: 
+                    case Token.BEGIN:
                         command = parseComandoComposto();
                     break;
                     default:
@@ -115,7 +115,7 @@ public class Parser {
 		}
                 return command;
 	}
-        
+
 	private ComandoComposto parseComandoComposto() throws Exception {
 		//begin <lista-de-comandos> end
                 //System.out.println("Parse Comando Composto ");
@@ -123,10 +123,10 @@ public class Parser {
                 accept(Token.BEGIN);
                 compositeCommand.listOfCommands = parseListaDeComandos();
                 accept(Token.END);
-                
+
                 return compositeCommand;
 	}
-        
+
         private Condicional parseCondicional() throws Exception{
             //System.out.println("Parse Condicional");
             Condicional conditional = new Condicional();
@@ -142,7 +142,7 @@ public class Parser {
             }
             return conditional;
         }
-        
+
         private Corpo parseCorpo() throws Exception {
 		// <corpo> ::= <declaraes> <comando-composto>
                 //System.out.println("Parse Corpo");
@@ -151,7 +151,7 @@ public class Parser {
                 body.compositeCommand = parseComandoComposto();
                 return body;
 	}
-        
+
         private DeclaracaoDeVariavel parseDeclaracaoDeVariavel() throws Exception{
             //System.out.println("Parse declaracao de variavel ");
             DeclaracaoDeVariavel variableDeclaration = new DeclaracaoDeVariavel();
@@ -159,10 +159,10 @@ public class Parser {
             variableDeclaration.listOfIds = parseListaDeIds();
             accept(Token.COLON);
             variableDeclaration.type = parseTipo();
-            
+
             return variableDeclaration;
         }
-        
+
         private Declaracoes parseDeclaracoes() throws Exception{
             //System.out.println("Parse Declaracoes");
             //DeclaracaoDeVariavel dec = NULL;
@@ -172,7 +172,7 @@ public class Parser {
                 aux.declarationOfVariable = parseDeclaracaoDeVariavel();
                 aux.next = null;
                 accept(Token.SEMICOLON);
-                
+
                 if( declarations == null){
                     declarations = aux;
                 } else {
@@ -182,11 +182,11 @@ public class Parser {
                     }
                     aux2.next = aux;
                 }
-                    
+
             }
             return declarations;
         }
-        
+
         private Expressao parseExpressao() throws Exception {
 		// <expresso> ::= <expresso-simples> | <expresso-simples> <op-rel> <expresso-simples>,
 		// <op-rel> ::= < | > | <=	| >= | = | <>
@@ -202,10 +202,10 @@ public class Parser {
                     expression.simpleExpressionR = null;
                     expression.operator = null;
                 }
-                
+
                 return expression;
 	}
-        
+
         private ExpressaoSimples parseExpressaoSimples() throws Exception {
 		// <expresso-simples> ::= <expresso-simples> <op-ad> <termo> | <termo>, <op-ad> ::= + | - | or
                 //System.out.println("Parse Expressao Simples");
@@ -213,18 +213,18 @@ public class Parser {
 		simpleExpression.word = parseTermo();
                 simpleExpression.operator = null;
                 simpleExpression.next = null;
-                
-                
-                
+
+
+
 		while(currentToken.kind == Token.SUM || currentToken.kind == Token.SUB || currentToken.kind == Token.OR){
 			ExpressaoSimples aux = new ExpressaoSimples();
                         aux.operator = currentToken;
                         acceptIt();
-                       
+
 			aux.word = parseTermo();
                         aux.next = null;
-                        
-                       
+
+
                         if(simpleExpression.next == null){
                             simpleExpression.next = aux;
                         } else{
@@ -235,11 +235,11 @@ public class Parser {
                             aux2.next = aux;
                         }
 		}
-                
+
                 return simpleExpression;
 
 	}
-        
+
         private Fator parseFator() throws Exception {
 		//<fator> ::= <varivel>	| <literal> | "(" <expresso> ")"
                 //System.out.println("Parse Fator");
@@ -263,11 +263,11 @@ public class Parser {
                         factor = null;
                         System.out.println("Erro");
                         System.exit(1);
-                        
+
                 }
                 return factor;
 	}
-        
+
         private Iterativo parseIterativo() throws Exception{
             //System.out.println("Parse Iterativos");
             Iterativo iterative = new Iterativo();
@@ -275,10 +275,10 @@ public class Parser {
             iterative.expression = parseExpressao();
             accept(Token.DO);
             iterative.command = parseComando();
-            
+
             return iterative;
         }
-        
+
         private ListaDeComandos parseListaDeComandos() throws Exception {
 		// <lista-de-comandos> ::=	<comando> ; | <lista-de-comandos> <comando> ; | <vazio>
                 //System.out.println("Parse Lista de comandos");
@@ -288,7 +288,7 @@ public class Parser {
                     aux.command = parseComando();
                     aux.next = null;
                     accept(Token.SEMICOLON);
-                    
+
                     if(listOfCommands == null){
                         listOfCommands = aux;
                     } else {
@@ -297,11 +297,11 @@ public class Parser {
                             aux2 = aux2.next;
                         }
                         aux2.next = aux;
-                    }                
+                    }
                 }
                 return listOfCommands;
 	}
-        
+
         private ListaDeIds parseListaDeIds() throws Exception {
 		// <lista-de-ids> ::= <id>	| <lista-de-ids> , <id>
                 //System.out.println("Parse lista de ids");
@@ -315,11 +315,11 @@ public class Parser {
 			aux.id = currentToken;
                         aux.next = null;
 			accept(Token.ID);
-                        
+
                         ListaDeIds aux2;
                         if(listOfIds.next == null){
                             listOfIds.next = aux;
-                        } else{  
+                        } else{
                             aux2 = listOfIds;
                             while(aux2.next != null){
                                 aux2 = aux2.next;
@@ -327,10 +327,10 @@ public class Parser {
                             aux2.next = aux;
                         }
 		}
-                
+
                 return listOfIds;
 	}
-        
+
         private Literal parseLiteral() throws Exception {
 		//<literal> ::= <bool-lit> | <int-lit> | <float-lit>
                 //System.out.println("Parse literal");
@@ -355,7 +355,7 @@ public class Parser {
                 }
                 return literal;
 	}
-        
+
 	private Programa parsePrograma() throws Exception {
 		// program <id> ; <corpo> .
                 //System.out.println("Parse Programa");
@@ -373,14 +373,14 @@ public class Parser {
 		// <seletor> ::= <seletor> "[" <expresso> "]" | "[" <expresso> "]" | <vazio>
                 //System.out.println("Parse Seletor");
                 Seletor selector = null;
-               
+
 		while(currentToken.kind == Token.LBRACKET) {
 			acceptIt();
                         Seletor aux = new Seletor();
 			aux.expression = parseExpressao();
                         aux.next = null;
 			accept(Token.RBRACKET);
-                        
+
                         if(selector == null){
                             selector = aux;
                         } else {
@@ -393,7 +393,7 @@ public class Parser {
 		}
                 return selector;
 	}
-        
+
         private Termo parseTermo() throws Exception {
 		// <termo> ::= <termo> <op-mul> <fator> | <fator> , <op-mul> ::= *	| / | and
                 //System.out.println("Parse Termo");
@@ -405,10 +405,10 @@ public class Parser {
 			Termo aux = new Termo();
                         aux.operator = currentToken;
                         acceptIt();
-                        
+
 			aux.factor = parseFator();
                         aux.next = null;
-                        
+
                         if(term.next == null){
                             term.next = aux;
                         } else{
@@ -421,7 +421,7 @@ public class Parser {
 		}
                 return term;
 	}
-	
+
         private Tipo parseTipo() throws Exception {
             //System.out.println("Parse Tipo");
                 Tipo typex;
@@ -458,7 +458,7 @@ public class Parser {
 		}
                 return typex;
 	}
-	
+
 	private Variavel parseVariavel() throws Exception {
 		// <varivel> ::=	<id> <seletor>
                 //System.out.println("Parse variavel");
@@ -466,7 +466,7 @@ public class Parser {
                 variable.id = currentToken;
                 accept(Token.ID);
 		variable.selector = parseSeletor();
-                
+
                 return variable;
 	}
 
