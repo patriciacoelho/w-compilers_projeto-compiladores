@@ -5,6 +5,8 @@
  */
 package AST;
 
+import Visitor.Visitor;
+
 
 /**
  *
@@ -13,4 +15,8 @@ package AST;
 public class Atribuicao extends Comando{
     public Variavel variable;
     public Expressao expression;
+    
+    public void visit(Visitor v){
+        v.visitAtribuicao(this);
+    }
 }

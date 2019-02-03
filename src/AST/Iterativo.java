@@ -5,11 +5,17 @@
  */
 package AST;
 
+import Visitor.Visitor;
+
 /**
  *
  * @author Uendel
  */
 public class Iterativo extends Comando{
     public Expressao expression;
-    public Comando Command;
+    public Comando command;
+    
+    public void visit(Visitor v){
+        v.visitIterativo(this);
+    }
 }

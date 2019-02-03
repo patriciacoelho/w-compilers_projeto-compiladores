@@ -5,12 +5,15 @@
  */
 package AST;
 
-import compiler.Token;
+import Visitor.Visitor;
 
 /**
  *
  * @author Uendel
  */
 public class BoolLit extends Literal {
-
+    
+    public void visit(Visitor v){
+        v.visitBoolLit(this);
+    }
 }

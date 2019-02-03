@@ -5,6 +5,7 @@
  */
 package AST;
 
+import Visitor.Visitor;
 import compiler.Token;
 
 /**
@@ -14,4 +15,8 @@ import compiler.Token;
 public class ListaDeIds {
     public Token id;
     public ListaDeIds next;
+    
+    public void visit(Visitor v){
+        v.visitListaDeIds(this);
+    }
 }

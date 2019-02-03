@@ -5,6 +5,8 @@
  */
 package AST;
 
+import Visitor.Visitor;
+
 /**
  *
  * @author Uendel
@@ -12,4 +14,8 @@ package AST;
 public class DeclaracaoDeVariavel {
     public ListaDeIds listOfIds;
     public Tipo type;
+    
+    public void visit(Visitor v){
+        v.visitDeclaracaoDeVariavel(this);
+    }
 }

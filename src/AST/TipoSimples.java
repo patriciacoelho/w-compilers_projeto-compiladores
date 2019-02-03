@@ -5,6 +5,7 @@
  */
 package AST;
 
+import Visitor.Visitor;
 import compiler.Token;
 
 /**
@@ -13,4 +14,8 @@ import compiler.Token;
  */
 public class TipoSimples extends Tipo{
     public Token typo;
+    
+    public void visit(Visitor v){
+        v.visitTipoSimples(this);
+    }
 }

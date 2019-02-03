@@ -1,8 +1,8 @@
 program uendel;
-    var uendel : integer;
-    var uendel: array[1 .. 5] of integer; 
+    var uendel, luiz, neto, couto : integer;
+    var x: array[1 .. 5] of integer; 
 begin
-    if sub > sum then
+    if 2 > 1 then
         begin
             x1[7*(4+5)] := sub = sum;
             y2 := a + a;

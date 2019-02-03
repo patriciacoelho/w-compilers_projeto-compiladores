@@ -5,6 +5,7 @@
  */
 package AST;
 
+import Visitor.Visitor;
 import compiler.Token;
 
 /**
@@ -14,4 +15,8 @@ import compiler.Token;
 public class Variavel extends Fator{
     public Token id;
     public Seletor selector;
+    
+    public void visit(Visitor v){
+        v.visitVariavel(this);
+    }
 }

@@ -1,23 +1,30 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package compiler;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import AST.Programa;
 
+/**
+ *
+ * @author Uendel
+ */
 public class Compiler {
-    public static void main(String[] args) throws Exception {
-        // TODO code application logic here
-        //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        String filename = "src/programa.pas";
-        try (BufferedReader file = new BufferedReader(new FileReader(filename))) {
-            Scanner scanner = new Scanner(file);
-            Token tk;
-            Parser p = new Parser(scanner);
-            p.parse();
-            /*do{
-                tk = scanner.scan();
-            System.out.println(tk.toString());
-            }while(tk.kind != Token.EOF); */
-        }
+    public static void main(String args[]) throws Exception{
+        Programa program;
+        String testes = "src/programa.pas";
+        Parser parser = new Parser();
+        Printer printer = new Printer();
+        //Checker checker = new Checker();
+        //Coder coder = new Coder();
+        program = parser.parse(testes); 
+        printer.print(program);
+        //checker.check(p);
+        //coder.code(p);
     }
     
+
+
 }

@@ -5,6 +5,8 @@
  */
 package AST;
 
+import Visitor.Visitor;
+
 /**
  *
  * @author Uendel
@@ -12,5 +14,9 @@ package AST;
 public class Corpo {
     public Declaracoes declarations;
     public ComandoComposto compositeCommand;
+    
+    public void visit(Visitor v){
+        v.visitCorpo(this);
+    }
     
 }

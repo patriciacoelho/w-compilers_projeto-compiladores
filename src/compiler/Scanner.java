@@ -1,6 +1,7 @@
 package compiler;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 
@@ -13,7 +14,8 @@ public class Scanner {
     private StringBuffer currentValue;
 
        
-    Scanner(BufferedReader file)throws Exception{
+    public Scanner(String fileName)throws Exception{
+        BufferedReader file = new BufferedReader(new FileReader(fileName));
         this.file = file;
         currentChar = (char)file.read(); //TO DO : pegar primeiro caractere do txt
         //System.out.println(currentChar);

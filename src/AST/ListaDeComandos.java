@@ -5,6 +5,8 @@
  */
 package AST;
 
+import Visitor.Visitor;
+
 /**
  *
  * @author Uendel
@@ -12,4 +14,8 @@ package AST;
 public class ListaDeComandos {
     public Comando command;
     public ListaDeComandos next;
+    
+    public void visit(Visitor v){
+        v.visitListaDeComandos(this);
+    }
 }

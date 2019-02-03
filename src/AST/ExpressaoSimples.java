@@ -5,6 +5,7 @@
  */
 package AST;
 
+import Visitor.Visitor;
 import compiler.Token;
 
 /**
@@ -15,4 +16,8 @@ public class ExpressaoSimples {
     public Termo word;
     public ExpressaoSimples next;
     public Token operator;
+    
+    public void visit(Visitor v){
+        v.visitExpressaoSimples(this);
+    }
 }

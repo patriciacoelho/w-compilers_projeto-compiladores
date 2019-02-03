@@ -26,15 +26,16 @@ import AST.TipoSimples;
 public class Parser {
 	private Token currentToken;
         private Token lastToken;
-	private final Scanner scanner;
+	private Scanner scanner;
 
-        Parser(Scanner scanner) throws Exception{
-            this.scanner = scanner;
-            currentToken = this.scanner.scan();
+        public Parser(){
+            
         }
         
-        public Programa parse() throws Exception{
+        public Programa parse(String fileName) throws Exception{
             Programa program;
+            scanner = new Scanner(fileName);
+            currentToken = this.scanner.scan();
             System.out.println("---> Iniciando análise Sintática");
             program = parsePrograma();
             return program;
@@ -175,11 +176,11 @@ public class Parser {
                 if( declarations == null){
                     declarations = aux;
                 } else {
-                    Declaracoes aux2 = declarations.next;
-                    while(aux2 != null){
+                    Declaracoes aux2 = declarations;
+                    while(aux2.next != null){
                         aux2 = aux2.next;
                     }
-                    aux2 = aux;
+                    aux2.next = aux;
                 }
                     
             }
@@ -199,6 +200,7 @@ public class Parser {
 			expression.simpleExpressionR = parseExpressaoSimples();
 		} else{
                     expression.simpleExpressionR = null;
+                    expression.operator = null;
                 }
                 
                 return expression;
@@ -209,6 +211,7 @@ public class Parser {
                 //System.out.println("Parse Expressao Simples");
                 ExpressaoSimples simpleExpression = new ExpressaoSimples();
 		simpleExpression.word = parseTermo();
+                simpleExpression.operator = null;
                 simpleExpression.next = null;
                 
                 
@@ -225,11 +228,11 @@ public class Parser {
                         if(simpleExpression.next == null){
                             simpleExpression.next = aux;
                         } else{
-                            ExpressaoSimples aux2 = simpleExpression.next;
-                            while(aux2 != null){
+                            ExpressaoSimples aux2 = simpleExpression;
+                            while(aux2.next != null){
                                 aux2 = aux2.next;
                             }
-                            aux2 = aux;
+                            aux2.next = aux;
                         }
 		}
                 
@@ -271,7 +274,7 @@ public class Parser {
             accept(Token.WHILE);
             iterative.expression = parseExpressao();
             accept(Token.DO);
-            iterative.Command = parseComando();
+            iterative.command = parseComando();
             
             return iterative;
         }
@@ -289,11 +292,11 @@ public class Parser {
                     if(listOfCommands == null){
                         listOfCommands = aux;
                     } else {
-                        ListaDeComandos aux2 = listOfCommands.next;
-                        while(aux2 != null){
+                        ListaDeComandos aux2 = listOfCommands;
+                        while(aux2.next != null){
                             aux2 = aux2.next;
                         }
-                        aux2 = aux;
+                        aux2.next = aux;
                     }                
                 }
                 return listOfCommands;
@@ -316,14 +319,15 @@ public class Parser {
                         ListaDeIds aux2;
                         if(listOfIds.next == null){
                             listOfIds.next = aux;
-                        } else{
-                            aux2 = listOfIds.next;
-                            while(aux2 != null){
+                        } else{  
+                            aux2 = listOfIds;
+                            while(aux2.next != null){
                                 aux2 = aux2.next;
                             }
-                            aux2 = aux;
+                            aux2.next = aux;
                         }
 		}
+                
                 return listOfIds;
 	}
         
@@ -380,11 +384,11 @@ public class Parser {
                         if(selector == null){
                             selector = aux;
                         } else {
-                            Seletor aux2 = selector.next;
-                            while(aux2 != null){
+                            Seletor aux2 = selector;
+                            while(aux2.next != null){
                                 aux2 = aux2.next;
                             }
-                            aux2 = aux;
+                            aux2.next = aux;
                         }
 		}
                 return selector;
@@ -395,6 +399,7 @@ public class Parser {
                 //System.out.println("Parse Termo");
                 Termo term = new Termo();
 		term.factor = parseFator();
+                term.operator = null;
                 term.next = null;
 		while(currentToken.kind == Token.MULT || currentToken.kind == Token.DIV || currentToken.kind == Token.AND) {
 			Termo aux = new Termo();
@@ -407,11 +412,11 @@ public class Parser {
                         if(term.next == null){
                             term.next = aux;
                         } else{
-                            Termo aux2 = term.next;
-                            while(aux2 != null){
+                            Termo aux2 = term;
+                            while(aux2.next != null){
                                 aux2 = aux2.next;
                             }
-                            aux2 = aux;
+                            aux2.next = aux;
                         }
 		}
                 return term;
