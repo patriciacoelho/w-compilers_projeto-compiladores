@@ -208,14 +208,18 @@ public class Printer implements Visitor{
     	i++;
     	out("Expressao Simples",i);
         ExpressaoSimples aux = simpleExpression;
+        int c = 0;
         while(aux != null){
+        	c++;
+        	if( c%2 == 0/*c é par*/ ){
+        		if(aux.operator != null){
+                	out(aux.operator.value,i+2);
+                }
+        	}
             if(aux.word != null){
                 i++; if (i > lvl) lvl = i;
                 aux.word.visit(this);
                 i--;
-            }
-            if(aux.operator != null){
-            	out(aux.operator.value,i+2);
             }
             aux = aux.next;
         }
@@ -337,7 +341,14 @@ public class Printer implements Visitor{
     	i++;
     	out("Termo",i);
         Termo aux = term;
+        int c = 0;
         while(aux != null){
+        	c++;
+        	if( c%2 == 0/*c é par*/ ){
+            	if(aux.operator != null){
+                	out(aux.operator.value,i+2);
+                }
+            }
             if(aux.factor instanceof Variavel){
                 i++;
                 if (i > lvl)
@@ -357,9 +368,8 @@ public class Printer implements Visitor{
                 ((Expressao)aux.factor).visit(this);
                 i--;
             }
-            if(aux.operator != null){
-            	out(aux.operator.value,i+2);
-            }
+
+
             aux = aux.next;
         }
         i--;
