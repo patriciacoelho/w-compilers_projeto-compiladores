@@ -39,25 +39,21 @@ public class Printer implements Visitor{
         program.visit(this);
     }
 
-    private void indent() {
-    	//System.out.print(i);
-        for(int x=0; x<=i/2;x++){
+    private void out(String nodeInfo, int indentLevel){
+    	for(int x=0; x<=indentLevel/2;x++){
         	System.out.print("|  ");
             System.out.print("  ");
         }
-    }
-
-    private void subIndent() {
-        for(int x=0; x<=lvl - i;x++){
-        	System.out.print("|  ");
-        }
+    	System.out.println(nodeInfo);
     }
 
     @Override
     public void visitAtribuicao(Atribuicao becomes) {
-        indent();
-        System.out.println("Atribuição");
-        indent();
+    	i++;
+    	out("Atribuição", i);
+//        indent();
+//        System.out.println("Atribuição");
+//        indent();
         if(becomes.variable != null){
             i++; if (i > lvl) lvl = i;
             becomes.variable.visit(this);
@@ -68,35 +64,41 @@ public class Printer implements Visitor{
             becomes.expression.visit(this);
             i--;
         }
+        i--;
 
     }
 
     @Override
     public void visitBoolLit(BoolLit boolLit) {
-        indent();
-        System.out.println("Bool Lit");
-        indent();
+    	out("Bool Lit", i);
+//        indent();
+//        System.out.println("Bool Lit");
+//        indent();
         System.out.println(boolLit.name.value);
     }
 
     @Override
     public void visitComandoComposto(ComandoComposto compositeCommands) {
-        indent();
-        System.out.println("Comando Composto");
-        indent();
+    	i++;
+    	out("Comando Composto",i);
+//        indent();
+//        System.out.println("Comando Composto");
+//        indent();
         if(compositeCommands.listOfCommands != null){
             i++; if (i > lvl) lvl = i;
             compositeCommands.listOfCommands.visit(this);
             i--;
         }
-
+        i--;
     }
 
     @Override
     public void visitCondicional(Condicional conditional) {
-        indent();
-        System.out.println("Condicional");
-        indent();
+    	i++;
+    	out("Condicional",i);
+//        indent();
+//        System.out.println("Condicional");
+//        indent();
         if(conditional.expression != null){
             i++; if (i > lvl) lvl = i;
             conditional.expression.visit(this);
@@ -139,13 +141,15 @@ public class Printer implements Visitor{
             ((Condicional)conditional.commandElse).visit(this);
             i--;
         }
+        i--;
     }
 
     @Override
     public void visitCorpo(Corpo body) {
-        indent();
-        System.out.println("Corpo");
-        indent();
+    	out("Corpo",i);
+//        indent();
+//        System.out.println("Corpo");
+//        indent();
         if(body != null){
             i++; if (i > lvl) lvl = i;
             body.declarations.visit(this);
@@ -158,9 +162,11 @@ public class Printer implements Visitor{
 
     @Override
     public void visitDeclaracaoDeVariavel(DeclaracaoDeVariavel variableDeclaration) {
-        indent();
-        System.out.println("Declaracao de Variavel");
-        indent();
+    	i++;
+    	out("Declaracao de Variavel",i);
+    	//        indent();
+//        System.out.println("Declaracao de Variavel");
+//        indent();
         if(variableDeclaration != null){
             i++; if (i > lvl) lvl = i;
             variableDeclaration.listOfIds.visit(this);
@@ -177,15 +183,17 @@ public class Printer implements Visitor{
                 }
             }
         }
+        i--;
 
         //variableDeclaration.type.visit(this);
     }
 
     @Override
     public void visitDeclaracoes(Declaracoes declarations) {
-        indent();
-        System.out.println("Declaracoes");
-        indent();
+    	out("Declaracoes",i);
+//        indent();
+//        System.out.println("Declaracoes");
+//        indent();
         Declaracoes aux = declarations;
         while(aux != null){
             i++; if (i > lvl) lvl = i;
@@ -197,33 +205,38 @@ public class Printer implements Visitor{
 
     @Override
     public void visitExpressao(Expressao expression) {
-
-        indent();
-        System.out.println("Expressao");
-        indent();
+    	i++;
+    	out("Expressao",i);
+//        indent();
+//        System.out.println("Expressao");
+//        indent();
         if(expression.simpleExpression != null){
             i++; if (i > lvl) lvl = i;
             expression.simpleExpression.visit(this);
             i--;
         }
         if(expression.operator != null){
-            indent();
-            System.out.println(expression.operator.value);
-            indent();
+        	out(expression.operator.value,i);
+//            indent();
+//            System.out.println(expression.operator.value);
+//            indent();
         }
         if(expression.simpleExpressionR != null){
             i++; if (i > lvl) lvl = i;
             expression.simpleExpressionR.visit(this);
             i--;
         }
+        i--;
 
     }
 
     @Override
     public void visitExpressaoSimples(ExpressaoSimples simpleExpression) {
-        indent();
-        System.out.println("Expressao Simples");
-        indent();
+    	i++;
+    	out("Expressao Simples",i);
+//        indent();
+//        System.out.println("Expressao Simples");
+//        indent();
         ExpressaoSimples aux = simpleExpression;
         while(aux != null){
             if(aux.word != null){
@@ -232,18 +245,22 @@ public class Printer implements Visitor{
                 i--;
             }
             if(aux.operator != null){
-                indent();
-                System.out.println(aux.operator.value);
+            	out(aux.operator.value,i);
+//                indent();
+//                System.out.println(aux.operator.value);
             }
             aux = aux.next;
         }
+        i--;
     }
 
     @Override
     public void visitIterativo(Iterativo iterative) {
-        indent();
-        System.out.println("Iterativo");
-        indent();
+    	i++;
+    	out("Iterativo",i);
+//        indent();
+//        System.out.println("Iterativo");
+//        indent();
         i++; if (i > lvl) lvl = i;
         iterative.expression.visit(this);
         i--;
@@ -264,14 +281,17 @@ public class Printer implements Visitor{
             ((Condicional)iterative.command).visit(this);
             i--;
         }
+        i--;
 
     }
 
     @Override
     public void visitListaDeComandos(ListaDeComandos listOfCommands) {
-        indent();
-        System.out.println("Lista de Comandos");
-        indent();
+    	i++;
+    	out("Lista de Comandos",i);
+//        indent();
+//        System.out.println("Lista de Comandos");
+//        indent();
         ListaDeComandos aux = listOfCommands;
 
         while(aux != null){
@@ -296,30 +316,39 @@ public class Printer implements Visitor{
             }
             aux = aux.next;
         }
+        i--;
     }
 
     @Override
     public void visitListaDeIds(ListaDeIds listOfIds) {
-        indent();
-        System.out.println("Lista De Ids");
+    	i++;
+    	out("Lista de Ids",i);
+//        indent();
+//        System.out.println("Lista De Ids");
         if(listOfIds != null){
             ListaDeIds aux = listOfIds;
             while(aux != null){
-                indent();
-                System.out.println(aux.id.value);
+            	out(aux.id.value, i+2);
+//                indent();
+//                System.out.println(aux.id.value);
                 aux = aux.next;
             }
         }
+        i--;
     }
 
     @Override
     public void visitLiteral(Literal literal) {
-        indent();
-        System.out.println("Literal");
+    	i++;
+    	out("Literal",i);
+//        indent();
+//        System.out.println("Literal");
         if(literal.name != null){
-            indent();
-            System.out.println(literal.name.value);
+        	out(literal.name.value,i+2);
+//            indent();
+//            System.out.println(literal.name.value);
         }
+        i--;
 
     }
 
@@ -337,9 +366,11 @@ public class Printer implements Visitor{
 
     @Override
     public void visitSeletor(Seletor selector) {
-        indent();
-        System.out.println("Seletor");
-        indent();
+    	i++;
+    	out("Seletor",i);
+//        indent();
+//        System.out.println("Seletor");
+//        indent();
         Seletor aux = selector;
         while(aux!= null){
             i++; if (i > lvl) lvl = i;
@@ -347,13 +378,16 @@ public class Printer implements Visitor{
             i--;
             aux = aux.next;
         }
+        i--;
     }
 
     @Override
     public void visitTermo(Termo term) {
-        indent();
-        System.out.println("Termo");
-        indent();
+    	i++;
+    	out("Termo",i);
+//        indent();
+//        System.out.println("Termo");
+//        indent();
         Termo aux = term;
         while(aux != null){
             if(aux.factor instanceof Variavel){
@@ -376,25 +410,30 @@ public class Printer implements Visitor{
                 i--;
             }
             if(aux.operator != null){
-                indent();
-                System.out.println(aux.operator);
-                indent();
+            	out(aux.operator.value,i);
+//                indent();
+//                System.out.println(aux.operator);
+//                indent();
             }
             aux = aux.next;
         }
-
+        i--;
 
     }
 
     @Override
     public void visitTipoAgregado(TipoAgregado type) {
-        indent();
-        System.out.println("Tipo Agregado");
-        indent();
-        System.out.println(type.literal1.name.value);
-        indent();
-        System.out.println(type.literal2.name.value);
-        indent();
+    	i++;
+    	out("Tipo Agregado",i);
+    	out(type.literal1.name.value,i+2);
+    	out(type.literal2.name.value,i+2);
+//        indent();
+//        System.out.println("Tipo Agregado");
+//        indent();
+//        System.out.println(type.literal1.name.value);
+//        indent();
+//        System.out.println(type.literal2.name.value);
+//        indent();
         if(type.typo instanceof TipoAgregado){
                 i++;
                 if (i > lvl)
@@ -410,26 +449,33 @@ public class Printer implements Visitor{
                 i--;
             }
         }
+        i--;
     }
 
     @Override
     public void visitTipoSimples(TipoSimples type) {
-        indent();
-        System.out.println("Tipo Simples");
+    	i++;
+    	out("Tipo Simples",i);
+//        indent();
+//        System.out.println("Tipo Simples");
         if(type.typo != null){
-            indent();
-            System.out.println(type.typo.value);
+        	out(type.typo.value,i+2);
+//            indent();
+//            System.out.println(type.typo.value);
         }
+        i--;
 
     }
 
     @Override
     public void visitVariavel(Variavel variable) {
-        indent();
-        System.out.println("Variavel");
-        indent();
-        System.out.println(variable.id.value);
-        indent();
+    	out("Variavel",i);
+    	out(variable.id.value,i+2);
+//        indent();
+//        System.out.println("Variavel");
+//        indent();
+//        System.out.println(variable.id.value);
+//        indent();
         if(variable.selector != null){
             i++;
             if (i > lvl)
