@@ -209,17 +209,20 @@ public class Printer implements Visitor{
     	out("Expressao Simples",i);
         ExpressaoSimples aux = simpleExpression;
         int c = 0;
+        boolean op_switch = false;
         while(aux != null){
         	c++;
-        	if( c%2 == 0/*c é par*/ ){
+        	if( op_switch ){
         		if(aux.operator != null){
                 	out(aux.operator.value,i+2);
+                	op_switch = false;
                 }
         	}
             if(aux.word != null){
                 i++; if (i > lvl) lvl = i;
                 aux.word.visit(this);
                 i--;
+                op_switch = true;
             }
             aux = aux.next;
         }
@@ -342,31 +345,36 @@ public class Printer implements Visitor{
     	out("Termo",i);
         Termo aux = term;
         int c = 0;
+        boolean op_switch = false;
         while(aux != null){
         	c++;
-        	if( c%2 == 0/*c é par*/ ){
-            	if(aux.operator != null){
+        	if( op_switch ){
+        		if(aux.operator != null){
                 	out(aux.operator.value,i+2);
+                	op_switch = false;
                 }
-            }
+        	}
             if(aux.factor instanceof Variavel){
                 i++;
                 if (i > lvl)
                 	lvl = i;
                 ((Variavel)aux.factor).visit(this);
                 i--;
+                op_switch = true;
             } else if(aux.factor instanceof Literal){
                 i++;
                 if (i > lvl)
                 	lvl = i;
                 ((Literal)aux.factor).visit(this);
                 i--;
+                op_switch = true;
             }  else if(aux.factor instanceof Expressao){
                 i++;
                 if (i > lvl)
                 	lvl = i;
                 ((Expressao)aux.factor).visit(this);
                 i--;
+                op_switch = true;
             }
 
 
