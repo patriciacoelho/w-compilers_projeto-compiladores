@@ -17,11 +17,11 @@ public class Compiler {
         String testes = "src/programa.pas";
         Parser parser = new Parser();
         Printer printer = new Printer();
-        //Checker checker = new Checker();
+        Checker checker = new Checker();
         //Coder coder = new Coder();
         program = parser.parse(testes); 
         printer.print(program);
-        //checker.check(p);
+        checker.check(program);
         //coder.code(p);
     }
     

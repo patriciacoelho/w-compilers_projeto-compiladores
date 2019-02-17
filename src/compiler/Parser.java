@@ -36,7 +36,7 @@ public class Parser {
             Programa program;
             scanner = new Scanner(fileName);
             currentToken = this.scanner.scan();
-            System.out.println("---> Iniciando análise Sintática");
+            System.out.println("---> Iniciando anï¿½lise Sintï¿½tica");
             program = parsePrograma();
             return program;
         }
@@ -210,7 +210,7 @@ public class Parser {
 		// <expresso-simples> ::= <expresso-simples> <op-ad> <termo> | <termo>, <op-ad> ::= + | - | or
                 //System.out.println("Parse Expressao Simples");
                 ExpressaoSimples simpleExpression = new ExpressaoSimples();
-		simpleExpression.word = parseTermo();
+		simpleExpression.term = parseTermo();
                 simpleExpression.operator = null;
                 simpleExpression.next = null;
 
@@ -221,7 +221,7 @@ public class Parser {
                         aux.operator = currentToken;
                         acceptIt();
 
-			aux.word = parseTermo();
+			aux.term = parseTermo();
                         aux.next = null;
 
 

@@ -12,6 +12,7 @@ import Visitor.Visitor;
  * @author Uendel
  */
 public class BoolLit extends Literal {
+    public String type;
     
     public void visit(Visitor v){
         v.visitBoolLit(this);

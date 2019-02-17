@@ -13,7 +13,7 @@ import compiler.Token;
  * @author Uendel
  */
 public class ExpressaoSimples {
-    public Termo word;
+    public Termo term;
     public ExpressaoSimples next;
     public Token operator;
     

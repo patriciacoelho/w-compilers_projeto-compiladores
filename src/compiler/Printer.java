@@ -35,7 +35,7 @@ public class Printer implements Visitor{
     int i=0;
     int lvl = 0;
     public void print(Programa program){
-        System.out.println("---> Iniciando impressão da Árvore");
+        System.out.println("---> Iniciando impressï¿½o da ï¿½rvore");
         program.visit(this);
     }
 
@@ -50,7 +50,7 @@ public class Printer implements Visitor{
     @Override
     public void visitAtribuicao(Atribuicao becomes) {
     	i++;
-    	out("Atribuição", i);
+    	out("Atribuiï¿½ï¿½o", i);
         if(becomes.variable != null){
             i++; if (i > lvl) lvl = i;
             becomes.variable.visit(this);
@@ -218,9 +218,9 @@ public class Printer implements Visitor{
                 	op_switch = false;
                 }
         	}
-            if(aux.word != null){
+            if(aux.term != null){
                 i++; if (i > lvl) lvl = i;
-                aux.word.visit(this);
+                aux.term.visit(this);
                 i--;
                 op_switch = true;
             }
