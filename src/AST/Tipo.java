@@ -11,6 +11,6 @@ package AST;
  * @author Uendel
  */
 public abstract class Tipo {
-
+    public String type;
   
 }

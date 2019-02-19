@@ -10,6 +10,6 @@ package AST;
  * @author Uendel
  */
 public abstract class Fator {
-    
+    public String type;
 }
  

@@ -12,8 +12,8 @@ import Visitor.Visitor;
  * @author Uendel
  */
 public class BoolLit extends Literal {
-    public String type;
     
+    @Override
     public void visit(Visitor v){
         v.visitBoolLit(this);
     }

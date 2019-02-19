@@ -40,7 +40,7 @@ public class Checker implements Visitor{
     }
     
     public void check(Programa program){
-        System.out.println ("---> Iniciando identificacao de nomes");
+        System.out.println ("---> Iniciando identificacao de nomes e tipos");
         program.visit(this);
         
     }
@@ -52,14 +52,17 @@ public class Checker implements Visitor{
         
         
         //Verificacao de tipos
-        /*
-        if(becomes.variable.type.equals(becomes.expression.type)){
-            becomes.type = becomes.variable.type;
-        } else if(becomes.variable.type.equals("real") && becomes.expression.type.equals("integer")){
+        if(becomes.variable.type != null){
+            if(becomes.variable.type.equals(becomes.expression.type)){
                 becomes.type = becomes.variable.type;
-        } else {
-            System.out.println("Atribuicao de valores incompatíveis linha:"+becomes.variable.id.line);
-        } */
+            } else if(becomes.variable.type.equals("real") && becomes.expression.type.equals("integer")){
+                becomes.type = becomes.variable.type;
+            } else {
+                System.out.println("Atribuicao de valores incompatíveis linha:"+becomes.variable.id.line+" coluna:"+becomes.variable.id.col); 
+            } 
+        }
+        
+        
     }
 
     @Override
@@ -70,7 +73,9 @@ public class Checker implements Visitor{
 
     @Override
     public void visitComandoComposto(ComandoComposto compositeCommands) {
-        compositeCommands.listOfCommands.visit(this);
+        if(compositeCommands.listOfCommands != null){
+            compositeCommands.listOfCommands.visit(this);
+        }
     }
 
     @Override
@@ -78,10 +83,10 @@ public class Checker implements Visitor{
         if(conditional.expression != null){
             conditional.expression.visit(this);
             //decoracao arvore
-            /*
             if(!conditional.expression.type.equals("boolean")){
-                System.out.println("Expressão inválida");//to do Token linha e coluna
-            } */
+                System.out.println("Expressão booleana esperada "+conditional.expression.type);//to do Token linha e coluna
+            } 
+            
         }
 
 
@@ -111,7 +116,10 @@ public class Checker implements Visitor{
 
     @Override
     public void visitCorpo(Corpo body) {
-        body.declarations.visit(this);
+        if(body.declarations!=null){
+           body.declarations.visit(this); 
+        }
+        
         body.compositeCommand.visit(this);
         
     }
@@ -126,18 +134,14 @@ public class Checker implements Visitor{
                
         }
         
-       /* 
        if(variableDeclaration.type instanceof TipoAgregado){
+            ((TipoAgregado)variableDeclaration.type).visit(this);
                 
-                ((TipoAgregado)variableDeclaration.type).visit(this);
-                
-       } else {
-                if(variableDeclaration.type instanceof TipoSimples){
-                   
-                    ((TipoSimples)variableDeclaration.type).visit(this);
-                    
-                }
-       }*/
+       } else{
+            if(variableDeclaration.type instanceof TipoSimples){
+                ((TipoSimples)variableDeclaration.type).visit(this);
+            }
+       }
     }
 
     @Override
@@ -153,24 +157,52 @@ public class Checker implements Visitor{
     public void visitExpressao(Expressao expression) {
         if(expression.simpleExpression != null){
             expression.simpleExpression.visit(this);
+            expression.type = expression.simpleExpression.type;
         }
         if(expression.simpleExpressionR != null){
             expression.simpleExpressionR.visit(this);
+            expression.type = "boolean";
         }
+        
       
     }
 
     @Override
-    public void visitExpressaoSimples(ExpressaoSimples simpleExpression) {
+    public void visitExpressaoSimples(ExpressaoSimples simpleExpression) { //o problema ta aqui e em termo
         ExpressaoSimples aux = simpleExpression;
+        String place = null;
         while(aux != null){
             if(aux.term != null){
                 aux.term.visit(this);
-            }
+                place = aux.term.type;
+                if(aux.operator != null){
+                    switch(aux.operator.kind){
+                        case Token.SUM:
+                        case Token.SUB:
+                            switch (place) {
+                                case "integer":
+                                    place = "integer";
+                                break;
+                                case "real":
+                                    place = "real";
+                                break; 
+                                default:
+                                    System.out.println("Tipos invalidos");
+                                break;
+                            }
+                        break;
+                        case Token.OR:
+                            place = "boolean";
+                            if(!place.equals(aux.term.type)){
+                                System.out.println("Tipo invalidos");
+                            }                     
+                        break; 
+                    }
+                }  
+            }             
             aux = aux.next;
         }
-        
-        
+        simpleExpression.type = place;  
     }
 
     @Override
@@ -178,7 +210,10 @@ public class Checker implements Visitor{
         if(iterative.expression != null){
             iterative.expression.visit(this);
         }
-
+        
+        if(!iterative.expression.type.equals("boolean")){
+            System.out.println("Expressão booleana esperada "+iterative.expression.type);
+        }
 
         if(iterative.command instanceof Atribuicao){
             ((Atribuicao)iterative.command).visit(this);
@@ -210,12 +245,21 @@ public class Checker implements Visitor{
 
     @Override
     public void visitListaDeIds(ListaDeIds listOfIds) {
-        
     }
 
     @Override
     public void visitLiteral(Literal literal) {
-        
+        switch(literal.name.kind){
+            case Token.INT_LIT:
+                literal.type = "integer";
+            break;
+            case Token.FLOAT_LIT:
+                literal.type = "real";
+            break;
+            case Token.BOOLEAN:
+                literal.type = "boolean";
+            break;
+        }
     }
 
     @Override
@@ -230,39 +274,51 @@ public class Checker implements Visitor{
             aux.expression.visit(this);
             aux = aux.next;
         }
+        
+        if(!selector.expression.type.equals("integer")){
+            System.out.println("Tipo inválido");
+        }
     }
 
     @Override
-    public void visitTermo(Termo term) {
+    public void visitTermo(Termo term) { // problema aqui tb
         Termo aux = term;
         while(aux != null){
             if(aux.factor != null){
                 if(aux.factor instanceof Variavel){
                     ((Variavel)aux.factor).visit(this);
+                    term.type = aux.factor.type;
                 } else if(aux.factor instanceof Literal){
                     ((Literal)aux.factor).visit(this);
+                    term.type = aux.factor.type;
                 }  else if(aux.factor instanceof Expressao){
                     ((Expressao)aux.factor).visit(this);
+                    term.type = aux.factor.type;
                 }
             }
-            
             aux = aux.next;
+            
         }
-    }
-
-    @Override
-    public void visitTipoAgregado(TipoAgregado type) {
-       
-    }
-
-    @Override
-    public void visitTipoSimples(TipoSimples type) {
         
     }
 
     @Override
+    public void visitTipoAgregado(TipoAgregado type) {
+       type.type = type.typo.type;
+    }
+
+    @Override
+    public void visitTipoSimples(TipoSimples type) {
+        type.type = type.typo.value;
+    }
+
+    @Override
     public void visitVariavel(Variavel variable) {
-       table.retrieve(variable.id);
+       variable.declaration = table.retrieve(variable.id);
+       if(variable.declaration != null){
+           variable.type = variable.declaration.type.type;
+       }
+       
     }
     
 }

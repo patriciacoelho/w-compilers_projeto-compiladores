@@ -15,7 +15,8 @@ import compiler.Token;
 public class Variavel extends Fator{
     public Token id;
     public Seletor selector;
-    public String type;
+    public DeclaracaoDeVariavel declaration;
+    
     
     public void visit(Visitor v){
         v.visitVariavel(this);

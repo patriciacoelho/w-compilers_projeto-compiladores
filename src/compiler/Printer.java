@@ -68,7 +68,7 @@ public class Printer implements Visitor{
     @Override
     public void visitBoolLit(BoolLit boolLit) {
     	out("Bool Lit", i);
-        System.out.println(boolLit.name.value);
+        out(boolLit.name.value,i+2);
     }
 
     @Override
@@ -137,7 +137,9 @@ public class Printer implements Visitor{
     	out("Corpo",i);
         if(body != null){
             i++; if (i > lvl) lvl = i;
-            body.declarations.visit(this);
+            if(body.declarations != null){
+                body.declarations.visit(this);
+            }
             body.compositeCommand.visit(this);
             i--;
         }

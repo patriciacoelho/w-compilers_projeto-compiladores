@@ -18,7 +18,6 @@ public class Expressao extends Fator{
     public ExpressaoSimples simpleExpression;
     public ExpressaoSimples simpleExpressionR;
     public Token operator;
-    public String type;
     
     public void visit(Visitor v){
         v.visitExpressao(this);

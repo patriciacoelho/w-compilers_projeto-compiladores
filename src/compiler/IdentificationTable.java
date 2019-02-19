@@ -17,7 +17,6 @@ public class IdentificationTable {
     HashMap table;
     IdentificationTable(){
         table = new HashMap();
-        System.out.println("declarado");
     }
     
     public void enter(Token id, DeclaracaoDeVariavel declaration){
@@ -26,10 +25,13 @@ public class IdentificationTable {
         }
     }
     
-    public void retrieve(Token id){
+    public DeclaracaoDeVariavel retrieve(Token id){
         if(table.containsKey(id.value) == false){
             System.out.println("Identificador "+id.value+" não declarado. linha= "+id.line+" col="+id.col);
-        } 
+        } else {
+            return (DeclaracaoDeVariavel)table.get(id.value);
+        }
+        return null;
     }
     
     public void print(){
