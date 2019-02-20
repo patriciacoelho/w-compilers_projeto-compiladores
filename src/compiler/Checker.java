@@ -161,7 +161,12 @@ public class Checker implements Visitor{
         }
         if(expression.simpleExpressionR != null){
             expression.simpleExpressionR.visit(this);
-            expression.type = "boolean";
+            if("real".equals(expression.simpleExpressionR.type) || expression.simpleExpressionR.type.equals("integer") ){
+                expression.type = "boolean";
+            } else {
+                System.out.println("Comparacao entre valores incompativeis");
+            }
+            
         }
         
       
@@ -270,14 +275,17 @@ public class Checker implements Visitor{
     @Override
     public void visitSeletor(Seletor selector) {
         Seletor aux = selector;
-        while(aux!= null){
+        while(aux != null){
             aux.expression.visit(this);
+            
+            
+            if(!aux.expression.type.equals("integer")){
+                System.out.println("Tipo inválido de seletor");
+            }
             aux = aux.next;
         }
         
-        if(!selector.expression.type.equals("integer")){
-            System.out.println("Tipo inválido");
-        }
+       
     }
 
     @Override
@@ -317,6 +325,9 @@ public class Checker implements Visitor{
        variable.declaration = table.retrieve(variable.id);
        if(variable.declaration != null){
            variable.type = variable.declaration.type.type;
+       }
+       if(variable.selector != null){
+           variable.selector.visit(this);
        }
        
     }
