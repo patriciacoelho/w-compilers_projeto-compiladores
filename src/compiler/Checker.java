@@ -31,26 +31,26 @@ import Visitor.Visitor;
  * @author Uendel
  */
 public class Checker implements Visitor{
-    
+
     IdentificationTable table;
-    
+
     Checker(){
         table = new IdentificationTable();
         //table.print();
     }
-    
+
     public void check(Programa program){
         System.out.println ("---> Iniciando identificacao de nomes e tipos");
         program.visit(this);
-        
+
     }
-    
+
     @Override
     public void visitAtribuicao(Atribuicao becomes) {
         becomes.variable.visit(this);
         becomes.expression.visit(this);
-        
-        
+
+
         //Verificacao de tipos
         if(becomes.variable.type != null){
             if(becomes.variable.type.equals(becomes.expression.type)){
@@ -58,11 +58,11 @@ public class Checker implements Visitor{
             } else if(becomes.variable.type.equals("real") && becomes.expression.type.equals("integer")){
                 becomes.type = becomes.variable.type;
             } else {
-                System.out.println("Atribuicao de valores incompatíveis linha:"+becomes.variable.id.line+" coluna:"+becomes.variable.id.col); 
-            } 
+                System.out.println("Atribuicao de valores incompatíveis linha:"+becomes.variable.id.line+" coluna:"+becomes.variable.id.col);
+            }
         }
-        
-        
+
+
     }
 
     @Override
@@ -85,8 +85,8 @@ public class Checker implements Visitor{
             //decoracao arvore
             if(!conditional.expression.type.equals("boolean")){
                 System.out.println("Expressão booleana esperada "+conditional.expression.type);//to do Token linha e coluna
-            } 
-            
+            }
+
         }
 
 
@@ -109,34 +109,34 @@ public class Checker implements Visitor{
         } else if(conditional.commandElse instanceof Condicional){
             ((Condicional)conditional.commandElse).visit(this);
         }
-        
-        
-        
+
+
+
     }
 
     @Override
     public void visitCorpo(Corpo body) {
         if(body.declarations!=null){
-           body.declarations.visit(this); 
+           body.declarations.visit(this);
         }
-        
+
         body.compositeCommand.visit(this);
-        
+
     }
 
     @Override
     public void visitDeclaracaoDeVariavel(DeclaracaoDeVariavel variableDeclaration) {
        ListaDeIds aux = variableDeclaration.listOfIds;
-       
+
        while(aux != null){
-               table.enter(aux.id, variableDeclaration); 
+               table.enter(aux.id, variableDeclaration);
                aux = aux.next;
-               
+
         }
-        
+
        if(variableDeclaration.type instanceof TipoAgregado){
             ((TipoAgregado)variableDeclaration.type).visit(this);
-                
+
        } else{
             if(variableDeclaration.type instanceof TipoSimples){
                 ((TipoSimples)variableDeclaration.type).visit(this);
@@ -168,8 +168,8 @@ public class Checker implements Visitor{
             }
             
         }
-        
-      
+
+
     }
 
     @Override
@@ -179,7 +179,8 @@ public class Checker implements Visitor{
         while(aux != null){
             if(aux.term != null){
                 aux.term.visit(this);
-                place = aux.term.type;
+                if( place == null || place == "integer")
+                	place = aux.term.type;
                 if(aux.operator != null){
                     switch(aux.operator.kind){
                         case Token.SUM:
@@ -190,7 +191,7 @@ public class Checker implements Visitor{
                                 break;
                                 case "real":
                                     place = "real";
-                                break; 
+                                break;
                                 default:
                                     System.out.println("Tipos invalidos");
                                 break;
@@ -200,14 +201,14 @@ public class Checker implements Visitor{
                             place = "boolean";
                             if(!place.equals(aux.term.type)){
                                 System.out.println("Tipo invalidos");
-                            }                     
-                        break; 
+                            }
+                        break;
                     }
-                }  
-            }             
+                }
+            }
             aux = aux.next;
         }
-        simpleExpression.type = place;  
+        simpleExpression.type = place;
     }
 
     @Override
@@ -215,7 +216,7 @@ public class Checker implements Visitor{
         if(iterative.expression != null){
             iterative.expression.visit(this);
         }
-        
+
         if(!iterative.expression.type.equals("boolean")){
             System.out.println("Expressão booleana esperada "+iterative.expression.type);
         }
@@ -284,8 +285,8 @@ public class Checker implements Visitor{
             }
             aux = aux.next;
         }
+
         
-       
     }
 
     @Override
@@ -305,9 +306,9 @@ public class Checker implements Visitor{
                 }
             }
             aux = aux.next;
-            
+
         }
-        
+
     }
 
     @Override
@@ -326,10 +327,11 @@ public class Checker implements Visitor{
        if(variable.declaration != null){
            variable.type = variable.declaration.type.type;
        }
+       
        if(variable.selector != null){
            variable.selector.visit(this);
        }
        
     }
-    
+
 }
