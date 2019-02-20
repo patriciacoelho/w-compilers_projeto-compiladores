@@ -179,7 +179,7 @@ public class Checker implements Visitor{
         while(aux != null){
             if(aux.term != null){
                 aux.term.visit(this);
-                if( place == null || place == "integer")
+                if( place == null || "integer".equals(place))
                 	place = aux.term.type;
                 if(aux.operator != null){
                     switch(aux.operator.kind){
@@ -193,14 +193,14 @@ public class Checker implements Visitor{
                                     place = "real";
                                 break;
                                 default:
-                                    System.out.println("Tipos invalidos");
+                                    System.out.println("Operandos invalidos");
                                 break;
                             }
                         break;
                         case Token.OR:
                             place = "boolean";
                             if(!place.equals(aux.term.type)){
-                                System.out.println("Tipo invalidos");
+                                System.out.println("Operandos invalidos linha: "+aux.operator.line);
                             }
                         break;
                     }
@@ -313,7 +313,17 @@ public class Checker implements Visitor{
 
     @Override
     public void visitTipoAgregado(TipoAgregado type) {
-       type.type = type.typo.type;
+        if(type.typo instanceof TipoAgregado){
+            ((TipoAgregado)type.typo).visit(this);
+        } else {
+            if(type.typo instanceof TipoSimples){
+               ((TipoSimples)type.typo).visit(this);
+            }
+        }
+        
+        
+        
+        type.type = type.typo.type;
     }
 
     @Override
