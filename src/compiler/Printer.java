@@ -406,7 +406,7 @@ public class Printer implements Visitor{
                 ((TipoSimples)type.typo).visit(this);
                 i--;
             }
-        }
+        } 
         i--;
     }
 

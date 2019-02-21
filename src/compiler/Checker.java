@@ -164,7 +164,7 @@ public class Checker implements Visitor{
             if("real".equals(expression.simpleExpressionR.type) || expression.simpleExpressionR.type.equals("integer") ){
                 expression.type = "boolean";
             } else {
-                System.out.println("Comparacao entre valores incompativeis");
+                System.out.println("Comparacao entre valores incompativeis linha= "+expression.operator.line);
             }
             
         }
@@ -251,6 +251,7 @@ public class Checker implements Visitor{
 
     @Override
     public void visitListaDeIds(ListaDeIds listOfIds) {
+        
     }
 
     @Override
@@ -292,6 +293,7 @@ public class Checker implements Visitor{
     @Override
     public void visitTermo(Termo term) { // problema aqui tb
         Termo aux = term;
+        String place = null;
         while(aux != null){
             if(aux.factor != null){
                 if(aux.factor instanceof Variavel){
@@ -304,6 +306,10 @@ public class Checker implements Visitor{
                     ((Expressao)aux.factor).visit(this);
                     term.type = aux.factor.type;
                 }
+                if(aux.operator != null && aux.operator.value.equals("/")){
+                    term.type = "real";
+                }
+                
             }
             aux = aux.next;
 
