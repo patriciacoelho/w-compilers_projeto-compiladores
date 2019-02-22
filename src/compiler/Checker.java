@@ -318,31 +318,46 @@ public class Checker implements Visitor{
                     ((Expressao)aux.factor).visit(this);
                     term.type = aux.factor.type;
                 }
-
-                //System.out.println(aux.factor.toString() + "   " + term.type);
-
 //                if(aux.operator != null && aux.operator.value.equals("/")){
 //                    term.type = "real";
 //                }
 
 
-                if( place == null || "integer".equals(place))
+                if( place == null )
                 	place = term.type;
+
                 if(aux.operator != null){
-                    switch(aux.operator.kind){
+                	System.out.println(place + " op-mul  " + term.type);
+                	switch(aux.operator.kind){
                         case Token.DIV:
-                        	place = "real";
-                        	if(term.type.equals("boolean")){
+                        	if(place.equals("boolean") || term.type.equals("boolean")){
                                 System.out.println("Operandos invalidos linha: "+aux.operator.line);
                             }
+                        	place = "real";
                         break;
                         case Token.MULT:
                             switch (place) {
                                 case "integer":
-                                    place = "integer";
+                                	switch (term.type){
+                                	case "integer":
+                                		place = "integer";
+                                	break;
+                                	case "real":
+                                		place = "real";
+                                	break;
+                                	default:
+                                		System.out.println("Operandos invalidos");
+                                	}
                                 break;
                                 case "real":
-                                    place = "real";
+                                	switch (term.type){
+                                	case "integer":
+                                	case "real":
+                                		place = "real";
+                                	break;
+                                	default:
+                                		System.out.println("Operandos invalidos");
+                                	}
                                 break;
                                 default:
                                     System.out.println("Operandos invalidos");
@@ -350,10 +365,10 @@ public class Checker implements Visitor{
                             }
                         break;
                         case Token.AND:
-                            place = "boolean";
-                            if(!place.equals(term.type)){
+                            if(!place.equals("boolean") || !term.type.equals("boolean")){
                                 System.out.println("Operandos invalidos linha: "+aux.operator.line);
                             }
+                            place = "boolean";
                         break;
                     }
                 }
