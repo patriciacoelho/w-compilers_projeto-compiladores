@@ -166,7 +166,7 @@ public class Checker implements Visitor{
             } else {
                 System.out.println("Comparacao entre valores incompativeis linha= "+expression.operator.line);
             }
-            
+
         }
 
 
@@ -179,7 +179,7 @@ public class Checker implements Visitor{
         while(aux != null){
             if(aux.term != null){
                 aux.term.visit(this);
-                if( place == null || "integer".equals(place))
+                if( place == null )
                 	place = aux.term.type;
                 if(aux.operator != null){
                     switch(aux.operator.kind){
@@ -187,21 +187,32 @@ public class Checker implements Visitor{
                         case Token.SUB:
                             switch (place) {
                                 case "integer":
-                                    place = "integer";
+                                	switch (aux.term.type){
+                                	case "integer":
+                                		place = "integer";
+                                	break;
+                                	case "real":
+                                		place = "real";
+                                	break;
+                                	default:
+                                		System.out.println("Operandos invalidos");
+                                	}
                                 break;
                                 case "real":
+                                    if ( aux.term.type.equals("boolean") ) {
+                                    	System.out.println("Operandos invalidos");
+                                    }
                                     place = "real";
                                 break;
                                 default:
                                     System.out.println("Operandos invalidos");
-                                break;
                             }
                         break;
                         case Token.OR:
-                            place = "boolean";
-                            if(!place.equals(aux.term.type)){
+                            if(!place.equals("boolean") || !aux.term.type.equals("boolean")){
                                 System.out.println("Operandos invalidos linha: "+aux.operator.line);
                             }
+                        	place = "boolean";
                         break;
                     }
                 }
@@ -251,7 +262,7 @@ public class Checker implements Visitor{
 
     @Override
     public void visitListaDeIds(ListaDeIds listOfIds) {
-        
+
     }
 
     @Override
@@ -279,15 +290,15 @@ public class Checker implements Visitor{
         Seletor aux = selector;
         while(aux != null){
             aux.expression.visit(this);
-            
-            
+
+
             if(!aux.expression.type.equals("integer")){
                 System.out.println("Tipo inválido de seletor");
             }
             aux = aux.next;
         }
 
-        
+
     }
 
     @Override
@@ -296,6 +307,7 @@ public class Checker implements Visitor{
         String place = null;
         while(aux != null){
             if(aux.factor != null){
+
                 if(aux.factor instanceof Variavel){
                     ((Variavel)aux.factor).visit(this);
                     term.type = aux.factor.type;
@@ -306,10 +318,46 @@ public class Checker implements Visitor{
                     ((Expressao)aux.factor).visit(this);
                     term.type = aux.factor.type;
                 }
-                if(aux.operator != null && aux.operator.value.equals("/")){
-                    term.type = "real";
+
+                //System.out.println(aux.factor.toString() + "   " + term.type);
+
+//                if(aux.operator != null && aux.operator.value.equals("/")){
+//                    term.type = "real";
+//                }
+
+
+                if( place == null || "integer".equals(place))
+                	place = term.type;
+                if(aux.operator != null){
+                    switch(aux.operator.kind){
+                        case Token.DIV:
+                        	place = "real";
+                        	if(term.type.equals("boolean")){
+                                System.out.println("Operandos invalidos linha: "+aux.operator.line);
+                            }
+                        break;
+                        case Token.MULT:
+                            switch (place) {
+                                case "integer":
+                                    place = "integer";
+                                break;
+                                case "real":
+                                    place = "real";
+                                break;
+                                default:
+                                    System.out.println("Operandos invalidos");
+                                break;
+                            }
+                        break;
+                        case Token.AND:
+                            place = "boolean";
+                            if(!place.equals(term.type)){
+                                System.out.println("Operandos invalidos linha: "+aux.operator.line);
+                            }
+                        break;
+                    }
                 }
-                
+
             }
             aux = aux.next;
 
@@ -326,9 +374,9 @@ public class Checker implements Visitor{
                ((TipoSimples)type.typo).visit(this);
             }
         }
-        
-        
-        
+
+
+
         type.type = type.typo.type;
     }
 
@@ -343,11 +391,11 @@ public class Checker implements Visitor{
        if(variable.declaration != null){
            variable.type = variable.declaration.type.type;
        }
-       
+
        if(variable.selector != null){
            variable.selector.visit(this);
        }
-       
+
     }
 
 }
