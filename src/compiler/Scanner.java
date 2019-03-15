@@ -17,28 +17,14 @@ public class Scanner {
     public Scanner(String fileName)throws Exception{
         BufferedReader file = new BufferedReader(new FileReader(fileName));
         this.file = file;
-        currentChar = (char)file.read(); //TO DO : pegar primeiro caractere do txt
-        //System.out.println(currentChar);
-        //System.out.println("valor corrente = "+currentValue);
+        currentChar = (char)file.read();
         col=0;
         line=1;
     }
 
-    private void take(char expectedChar) throws Exception{
-        if(currentChar == expectedChar){
-            currentValue.append(currentChar);
-            currentChar = (char)file.read(); //currentChar = proximo caractere;
-            //System.out.println(currentChar);
-        } else {
-            //retorna token erro
-        }
-    }
-
     private void takeIt() throws Exception{
         currentValue.append(currentChar);
-        currentChar = (char)file.read(); //currentChar = proximo caractere;
-        //System.out.println(currentChar);
-
+        currentChar = (char)file.read();
         col++;
     }
 
@@ -201,14 +187,8 @@ public class Scanner {
             aux = col;
             return Token.EQUAL;
         }
-        //TO DO : LER O EOF e o float-lit
-        //System.out.println((int)currentChar);
-        //System.out.println("o vilão está acima");
         takeIt();
         return Token.ERROR;
-
-
-        //TO DO : return erro
     }
 
     private void scanSeparator() throws Exception{ //Revisar simbolos
@@ -218,10 +198,9 @@ public class Scanner {
                 aux = col;
                 while(isGraphic(currentChar)){
                     takeIt();
-
                 }
-                take('\n');
-                //line++;
+                if (currentChar == '\n')
+                    takeIt();
                 col=-1;
             }
             break;
@@ -239,8 +218,6 @@ public class Scanner {
     public Token scan() throws Exception{
         currentValue = new StringBuffer("");
         while(currentChar == '#' || currentChar == ' ' || currentChar == '\n' || currentChar == 13 || currentChar == '\t' || currentChar == 10){
-            //System.out.println("opa");
-            //System.out.println((int)currentChar);
             scanSeparator();
         }
         currentValue.delete(0,currentValue.length());
@@ -253,7 +230,6 @@ public class Scanner {
         Token tk;
         do{
             tk = scan();
-            //tk.imprimir();
             lista.add(tk);
         }while(tk.kind != Token.EOF);
         return lista;

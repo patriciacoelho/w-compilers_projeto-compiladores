@@ -25,21 +25,21 @@ import AST.TipoSimples;
 
 public class Parser {
 	private Token currentToken;
-        private Token lastToken;
+    private Token lastToken;
 	private Scanner scanner;
 
-        public Parser(){
+    public Parser(){
 
-        }
+    }
 
-        public Programa parse(String fileName) throws Exception{
-            Programa program;
-            scanner = new Scanner(fileName);
-            currentToken = this.scanner.scan();
-            System.out.println("---> Iniciando an�lise Sint�tica");
-            program = parsePrograma();
-            return program;
-        }
+    public Programa parse(String fileName) throws Exception{
+        Programa program;
+        scanner = new Scanner(fileName);
+        currentToken = this.scanner.scan();
+        System.out.println("---> Iniciando an�lise Sint�tica");
+        program = parsePrograma();
+        return program;
+    }
 
 	private void accept (byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
