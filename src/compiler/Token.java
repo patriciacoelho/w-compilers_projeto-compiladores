@@ -8,7 +8,7 @@ public class Token {
 
     public Token(byte kind, String value, int line, int col){
         this.kind = kind;
-        this.value = SPELLINGS[kind]; //value;
+        this.value = value;
         this.line = line;
         this.col = col;
 
