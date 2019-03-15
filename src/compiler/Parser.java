@@ -36,22 +36,22 @@ public class Parser {
         Programa program;
         scanner = new Scanner(fileName);
         currentToken = this.scanner.scan();
-        System.out.println("---> Iniciando an�lise Sint�tica");
+        System.out.println("---> INICIANDO ANALISE SINTATICA\n");
         program = parsePrograma();
+        System.out.println("> CONCLUIDA COM SUCESSO\n");
         return program;
     }
 
 	private void accept (byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
-                        lastToken = currentToken;
+            lastToken = currentToken;
 			currentToken = scanner.scan();
-                }
-                else {
-			// erro sintatico, esperava 'expectedKind'
-                        System.out.println("erro sintatico");
-                        System.out.println("Esperava encontrar "+ Token.SPELLINGS[expectedKind]+"\n linha:" + lastToken.line+ "\n col:"+lastToken.col);
-                        System.exit(1);
-                }
+		}
+        else {
+        	System.out.print("ERRO SINTATICO: ");
+            System.out.println("Esperava encontrar '"+ Token.SPELLINGS[expectedKind]+"' [lin: " + lastToken.line+ "; col: "+lastToken.col+"].");
+            System.exit(1);
+        }
 	}
 
 	private void acceptIt () throws Exception{
@@ -78,16 +78,8 @@ public class Parser {
         private BoolLit parseBoolLit() throws Exception{
             //System.out.println("Parse Bool Lit");
             BoolLit logic = new BoolLit();
-            switch(currentToken.kind){
-                case Token.TRUE:
-                case Token.FALSE:
-                    logic.name = currentToken;
-                    acceptIt();
-                break;
-                default:
-                    System.out.println("Unexpected Character");
-
-            }
+            logic.name = currentToken;
+            acceptIt();
             return logic;
         }
 
@@ -95,23 +87,24 @@ public class Parser {
                 //System.out.println("Parse Comando");
                 Comando command;
 		switch(currentToken.kind){
-                    case Token.ID: //atribuicao
-                        command = parseAtribuicao();
-                    break;
-                    case Token.IF:  //condicional
-                        command = parseCondicional();
-                    break;
-                    case Token.WHILE: 	//iterativo
-                        command = parseIterativo();
-                    break;
-                    case Token.BEGIN:
-                        command = parseComandoComposto();
-                    break;
-                    default:
-			//Error
-                        command = null;
-                        System.out.println("Unexpected Symbol = "+currentToken.value);
-                        System.exit(1);
+            case Token.ID: //atribuicao
+                command = parseAtribuicao();
+            break;
+            case Token.IF:  //condicional
+                command = parseCondicional();
+            break;
+            case Token.WHILE: 	//iterativo
+                command = parseIterativo();
+            break;
+            case Token.BEGIN:
+                command = parseComandoComposto();
+            break;
+            default:
+                command = null;
+                System.out.print("ERRO SINTATICO: ");
+                System.out.println("Esperava encontrar comando após a linha " + lastToken.line+ ". \nNão esperava encontrar '"+
+                					currentToken.value+"' após o '"+lastToken.value+"'.");
+                System.exit(1);
 		}
                 return command;
 	}
@@ -240,32 +233,33 @@ public class Parser {
 
 	}
 
-        private Fator parseFator() throws Exception {
-		//<fator> ::= <varivel>	| <literal> | "(" <expresso> ")"
-                //System.out.println("Parse Fator");
-                Fator factor;
-                switch(currentToken.kind){
-                    case Token.ID:
-                        factor = parseVariavel();
-                    break;
-                    case Token.TRUE:
-                    case Token.FALSE:
-                    case Token.INT_LIT:
-                    case Token.FLOAT_LIT:
-                        factor = parseLiteral();
-                    break;
-                    case Token.LPAREN:
-                        acceptIt();
-                        factor = parseExpressao();
-                        accept(Token.RPAREN);
-                    break;
-                    default:
-                        factor = null;
-                        System.out.println("Erro");
-                        System.exit(1);
-
-                }
-                return factor;
+    private Fator parseFator() throws Exception {
+    	//<fator> ::= <varivel>	| <literal> | "(" <expresso> ")"
+        //System.out.println("Parse Fator");
+        Fator factor;
+        switch(currentToken.kind){
+            case Token.ID:
+                factor = parseVariavel();
+            break;
+            case Token.TRUE:
+            case Token.FALSE:
+            case Token.INT_LIT:
+            case Token.FLOAT_LIT:
+                factor = parseLiteral();
+            break;
+            case Token.LPAREN:
+                acceptIt();
+                factor = parseExpressao();
+                accept(Token.RPAREN);
+            break;
+            default:
+                factor = null;
+                System.out.print("ERRO SINTATICO: ");
+                System.out.println("Esperava encontrar um operando válido [lin: " + lastToken.line+ "; col: "+lastToken.col+"]. \nO fator '"+
+                					currentToken.value+"' encontrado não é um fator aceito pela linguagem.");
+                System.exit(1);
+        }
+        return factor;
 	}
 
         private Iterativo parseIterativo() throws Exception{
@@ -331,29 +325,31 @@ public class Parser {
                 return listOfIds;
 	}
 
-        private Literal parseLiteral() throws Exception {
+    private Literal parseLiteral() throws Exception {
 		//<literal> ::= <bool-lit> | <int-lit> | <float-lit>
-                //System.out.println("Parse literal");
-                Literal literal = new Literal();
-                switch(currentToken.kind){
-                    case Token.TRUE:
-                    case Token.FALSE:
-                        literal = parseBoolLit();
-                    break;
-                    case Token.INT_LIT:
-                        literal.name = currentToken;
-                        acceptIt();
-                    break;
-                    case Token.FLOAT_LIT:
-                        literal.name = currentToken;
-                        acceptIt();
-                    break;
-                    default:
-                        literal = null;
-                        System.out.println("Erro");
-                        System.exit(1);
-                }
-                return literal;
+        //System.out.println("Parse literal");
+        Literal literal = new Literal();
+        switch(currentToken.kind){
+            case Token.TRUE:
+            case Token.FALSE:
+                literal = parseBoolLit();
+            break;
+            case Token.INT_LIT:
+                literal.name = currentToken;
+                acceptIt();
+            break;
+            case Token.FLOAT_LIT:
+                literal.name = currentToken;
+                acceptIt();
+            break;
+            default:
+                literal = null;
+                System.out.print("ERRO SINTATICO: ");
+                System.out.println("Esperava encontrar um literal como limite do array ao invés de '"+
+                					currentToken.value+"' [lin: " + lastToken.line+ "; col: "+lastToken.col+"].");
+                System.exit(1);
+        }
+        return literal;
 	}
 
 	private Programa parsePrograma() throws Exception {
@@ -394,30 +390,30 @@ public class Parser {
                 return selector;
 	}
 
-        private Termo parseTermo() throws Exception {
+    private Termo parseTermo() throws Exception {
 		// <termo> ::= <termo> <op-mul> <fator> | <fator> , <op-mul> ::= *	| / | and
-                //System.out.println("Parse Termo");
-                Termo term = new Termo();
+        //System.out.println("Parse Termo");
+        Termo term = new Termo();
 		term.factor = parseFator();
-                term.operator = null;
-                term.next = null;
+        term.operator = null;
+        term.next = null;
 		while(currentToken.kind == Token.MULT || currentToken.kind == Token.DIV || currentToken.kind == Token.AND) {
 			Termo aux = new Termo();
-                        aux.operator = currentToken;
-                        acceptIt();
+            aux.operator = currentToken;
+            acceptIt();
 
 			aux.factor = parseFator();
-                        aux.next = null;
+            aux.next = null;
 
-                        if(term.next == null){
-                            term.next = aux;
-                        } else{
-                            Termo aux2 = term;
-                            while(aux2.next != null){
-                                aux2 = aux2.next;
-                            }
-                            aux2.next = aux;
-                        }
+            if(term.next == null){
+                term.next = aux;
+            } else{
+                Termo aux2 = term;
+                while(aux2.next != null){
+                    aux2 = aux2.next;
+                }
+                aux2.next = aux;
+            }
 		}
                 return term;
 	}
@@ -452,7 +448,7 @@ public class Parser {
 			break;
                     default:
                         typex = null;
-                        System.out.println("erro, esperava um tipo vlido");
+                        System.out.println("erro, esperava um tipo valido");
                         System.exit(1);
 			// erro, esperava um tipo vlido
 		}
@@ -461,13 +457,13 @@ public class Parser {
 
 	private Variavel parseVariavel() throws Exception {
 		// <varivel> ::=	<id> <seletor>
-                //System.out.println("Parse variavel");
-                Variavel variable = new Variavel();
-                variable.id = currentToken;
-                accept(Token.ID);
+        //System.out.println("Parse variavel");
+        Variavel variable = new Variavel();
+        variable.id = currentToken;
+        accept(Token.ID);
 		variable.selector = parseSeletor();
 
-                return variable;
+		return variable;
 	}
 
 }

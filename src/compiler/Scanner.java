@@ -1,7 +1,9 @@
 package compiler;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -14,18 +16,33 @@ public class Scanner {
     private StringBuffer currentValue;
 
 
-    public Scanner(String fileName)throws Exception{
-        BufferedReader file = new BufferedReader(new FileReader(fileName));
-        this.file = file;
-        currentChar = (char)file.read();
-        col=0;
-        line=1;
+    public Scanner(String fileName){
+    	this.file = sourceFile(fileName);
     }
 
+    private BufferedReader sourceFile(String fileName) {
+    	BufferedReader file;
+		try {
+			file = new BufferedReader(new FileReader(fileName));
+		    currentChar = (char) file.read();
+		    col=0;
+		    line=1;
+		    return file;
+		} catch (FileNotFoundException e) {
+			System.out.println("ERRO: Programa fonte não encontrado\n[" + e + "].");
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("ERRO: Programa fonte não encontrado\n[" + e + "].");
+			System.exit(1);
+		}
+		return null;
+    }
     private void takeIt() throws Exception{
         currentValue.append(currentChar);
-        currentChar = (char)file.read();
-        col++;
+        if( file != null) {
+        	currentChar = (char) file.read();
+            col++;
+        }
     }
 
     private boolean isDigit(char c){
@@ -39,7 +56,7 @@ public class Scanner {
     private boolean isGraphic(char c){
         boolean x = (c >= 32 && c<= 126);
         boolean y = false;
-        if(c == '�' || c == '~'){
+        if(c == '�' || c == '~'){
                 y = true;
         }
         return x || y;

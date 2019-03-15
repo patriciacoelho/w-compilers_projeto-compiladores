@@ -12,8 +12,9 @@ program test;
 		begin
 			sum := sum + i;
 			sub := ( sub - i ) * 7;
-			if ( sub > sum ) than
+			if ( sub > sum ) then
 				#something
+				activate := true and untrue;
 			else
 				#something else
 			;

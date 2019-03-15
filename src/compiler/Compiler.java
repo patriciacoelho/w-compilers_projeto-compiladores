@@ -14,7 +14,7 @@ import AST.Programa;
 public class Compiler {
     public static void main(String args[]) throws Exception{
         Programa program;
-        boolean lexical_debug = true;
+        boolean lexical_debug = false;
 
         String testes = "src/programa.pas";
 
