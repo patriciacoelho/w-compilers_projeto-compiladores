@@ -54,7 +54,7 @@ public class Scanner {
     }
 
     private boolean isGraphic(char c){
-        boolean x = (c >= 32 && c<= 126);
+        boolean x = c==9 || (c >= 32 && c<= 126);
         boolean y = false;
         if(c == '�' || c == '~'){
                 y = true;

@@ -14,7 +14,7 @@ import AST.Programa;
 public class Compiler {
     public static void main(String args[]) throws Exception{
         Programa program;
-        boolean lexical_debug = false;
+        boolean lexical_debug = true;
 
         String testes = "src/programa.pas";
 
@@ -29,6 +29,7 @@ public class Compiler {
 	            tk.print();
 	            // System.out.println(tk.toString());
 	        } while(tk.kind != Token.EOF);
+	        System.out.println("\n> FIM DA ANALISE LEXICA\n");
         } else {
 	        Parser parser = new Parser();
 	        Printer printer = new Printer();

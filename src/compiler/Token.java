@@ -30,7 +30,10 @@ public class Token {
     }
 
     public void print(){
-        System.out.printf("%20s | %4d | %4d | %3d \n", this.value, this.kind, this.line, this.col);
+    	String aux = this.value;
+    	if (this.kind == 40 || this.kind == 41)
+    		aux = SPELLINGS[this.kind];
+        System.out.printf("%20s | %4d | %4d | %3d \n", aux, this.kind, this.line, this.col);
     }
 
 
@@ -48,6 +51,6 @@ public class Token {
         "<id>", "<int-lit>","<float-lit>", "+", "-", "*", "/", ">", ">=", "<=", "<>", "<",
         "[", "]", ";", ":=", ":", "(", ")", "..",".", ",", "begin", "end", "if",
         "then", "else", "var","while", "do", "or", "and", "program", "array",
-        "of", "integer", "real","true","false", "boolean", "<EOF>", "<ERRO>", "="
+        "of", "integer", "real","true","false", "boolean", "<EOF>", "<ERROR>", "="
     };
 }
