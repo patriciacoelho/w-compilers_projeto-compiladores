@@ -48,7 +48,6 @@ public class Parser {
 			currentToken = scanner.scan();
 		}
         else {
-        	System.out.println(lastToken+" ||| "+currentToken+"\n");
         	if(lastToken.kind == Token.SEMICOLON && currentToken.kind == Token.SEMICOLON) {
         		System.out.print("ERRO SINTATICO: ");
                 System.out.println("Não esperava encontrar ';' [lin: " + currentToken.line+ "; col: "+currentToken.col+"].");
