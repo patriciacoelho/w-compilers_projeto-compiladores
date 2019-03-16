@@ -48,6 +48,12 @@ public class Parser {
 			currentToken = scanner.scan();
 		}
         else {
+        	System.out.println(lastToken+" ||| "+currentToken+"\n");
+        	if(lastToken.kind == Token.SEMICOLON && currentToken.kind == Token.SEMICOLON) {
+        		System.out.print("ERRO SINTATICO: ");
+                System.out.println("Não esperava encontrar ';' [lin: " + currentToken.line+ "; col: "+currentToken.col+"].");
+                System.exit(1);
+        	}
         	System.out.print("ERRO SINTATICO: ");
             System.out.println("Esperava encontrar '"+ Token.SPELLINGS[expectedKind]+"' [lin: " + lastToken.line+ "; col: "+lastToken.col+"].");
             System.exit(1);
@@ -83,30 +89,30 @@ public class Parser {
             return logic;
         }
 
-        private Comando parseComando() throws Exception {
-                //System.out.println("Parse Comando");
-                Comando command;
+    private Comando parseComando() throws Exception {
+        //System.out.println("Parse Comando");
+        Comando command;
 		switch(currentToken.kind){
-            case Token.ID: //atribuicao
-                command = parseAtribuicao();
-            break;
-            case Token.IF:  //condicional
-                command = parseCondicional();
-            break;
-            case Token.WHILE: 	//iterativo
-                command = parseIterativo();
-            break;
-            case Token.BEGIN:
-                command = parseComandoComposto();
-            break;
-            default:
-                command = null;
-                System.out.print("ERRO SINTATICO: ");
-                System.out.println("Esperava encontrar comando após a linha " + lastToken.line+ ". \nNão esperava encontrar '"+
-                					currentToken.value+"' após o '"+lastToken.value+"'.");
-                System.exit(1);
+        case Token.ID: //atribuicao
+            command = parseAtribuicao();
+        break;
+        case Token.IF:  //condicional
+            command = parseCondicional();
+        break;
+        case Token.WHILE: 	//iterativo
+            command = parseIterativo();
+        break;
+        case Token.BEGIN:
+            command = parseComandoComposto();
+        break;
+        default:
+            command = null;
+            System.out.print("ERRO SINTATICO: ");
+            System.out.println("Esperava encontrar comando após a linha " + lastToken.line+ ". \nNão esperava encontrar '"+
+            					currentToken.value+"' após o '"+lastToken.value+"'.");
+            System.exit(1);
 		}
-                return command;
+        return command;
 	}
 
 	private ComandoComposto parseComandoComposto() throws Exception {
@@ -127,6 +133,7 @@ public class Parser {
             conditional.expression = parseExpressao();
             accept(Token.THEN);
             conditional.command = parseComando();
+            accept(Token.SEMICOLON);
             if(currentToken.kind == Token.ELSE){
                 acceptIt();
                 conditional.commandElse = parseComando();
@@ -273,15 +280,17 @@ public class Parser {
             return iterative;
         }
 
-        private ListaDeComandos parseListaDeComandos() throws Exception {
-		// <lista-de-comandos> ::=	<comando> ; | <lista-de-comandos> <comando> ; | <vazio>
-                //System.out.println("Parse Lista de comandos");
-                ListaDeComandos listOfCommands = null;
+    private ListaDeComandos parseListaDeComandos() throws Exception {
+	// <lista-de-comandos> ::=	<comando> ; | <lista-de-comandos> <comando> ; | <vazio>
+            //System.out.println("Parse Lista de comandos");
+            ListaDeComandos listOfCommands = null;
+
 		while(currentToken.kind==Token.ID || currentToken.kind==Token.IF || currentToken.kind==Token.WHILE || currentToken.kind==Token.BEGIN){
                     ListaDeComandos aux = new ListaDeComandos();
                     aux.command = parseComando();
                     aux.next = null;
-                    accept(Token.SEMICOLON);
+                    if (lastToken.kind != Token.SEMICOLON)
+                    	accept(Token.SEMICOLON);
 
                     if(listOfCommands == null){
                         listOfCommands = aux;

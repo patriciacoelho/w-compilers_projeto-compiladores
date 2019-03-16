@@ -17,7 +17,7 @@ program test;
 				activate := true and untrue;
 			else
 				#something else
-			;
+				activate := 1 > 2; # and 2 > 3
 		end;
 
 	end
