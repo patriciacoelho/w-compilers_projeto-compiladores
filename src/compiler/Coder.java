@@ -32,26 +32,30 @@ import Visitor.Visitor;
  */
 public class Coder implements Visitor{
     
-    public void code(Programa program){
+    public void code(Programa program){ //feito
         System.out.println("Iniciando Geracao de Codigo");
+        System.out.println("");
         program.visit(this);
         System.out.println("HALT");
     }
     
     
     @Override
-    public void visitAtribuicao(Atribuicao becomes) {
-        becomes.variable.visit(this);
+    public void visitAtribuicao(Atribuicao becomes) { //feito
         becomes.expression.visit(this);
         
         //retorno de valor
         becomes.variable.value =  becomes.expression.value;
-        System.out.println(becomes.variable.id.value+" "+becomes.variable.value+becomes.expression.value);
+        //System.out.println(becomes.variable.id.value+" "+becomes.variable.value+becomes.expression.value);
+        
+        //Geracao Codigo
+        System.out.println("STORE "+becomes.variable.id.value); //substituido para endereço
     }
 
     @Override
     public void visitBoolLit(BoolLit boolLit) {
         boolLit.value = boolLit.name.value; //add retorno literal
+        
     }
 
     @Override
@@ -62,11 +66,13 @@ public class Coder implements Visitor{
     }
 
     @Override
-    public void visitCondicional(Condicional conditional) {
+    public void visitCondicional(Condicional conditional) { //feito
         
         if(conditional.expression != null){
             conditional.expression.visit(this);
         }
+        
+        System.out.println("JUMPIF(0) g");
         
         if(conditional.command instanceof Atribuicao){
             ((Atribuicao)conditional.command).visit(this);
@@ -77,7 +83,10 @@ public class Coder implements Visitor{
         } else if(conditional.command instanceof Condicional){
             ((Condicional)conditional.command).visit(this);
         }
-
+        
+        System.out.println("JUMP h");
+        
+        System.out.print("g: ");
         if(conditional.commandElse instanceof Atribuicao){
             ((Atribuicao)conditional.commandElse).visit(this);
         } else if(conditional.commandElse instanceof ComandoComposto){
@@ -87,14 +96,18 @@ public class Coder implements Visitor{
         } else if(conditional.commandElse instanceof Condicional){
             ((Condicional)conditional.commandElse).visit(this);
         }
+        
+        System.out.print("h: ");
     }
 
     @Override
     public void visitCorpo(Corpo body) {
+        System.out.println("PUSH ");
         if(body.declarations!=null){
            body.declarations.visit(this);
         }
         body.compositeCommand.visit(this);
+        System.out.println("POP ");
     }
 
     @Override
@@ -133,6 +146,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) < Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL greater");
                         break;
                     case ">":
                         if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
@@ -141,6 +155,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) > Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL lesser");
                         break;
                     case "<=":
                         if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
@@ -149,6 +164,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) <= Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL greater_equal");
                         break;
                     case ">=":
                         if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
@@ -157,6 +173,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) >= Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL lesser_equal");
                         break;
                     case "=":
                         if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
@@ -165,6 +182,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) == Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL equals");
                         break;
                     case "<>":
                         if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
@@ -173,6 +191,7 @@ public class Coder implements Visitor{
                             a = Float.parseFloat(expression.simpleExpression.value) != Float.parseFloat(expression.simpleExpressionR.value);
                             expression.value = Boolean.toString(a); //add retorno literal
                         }
+                        System.out.println("CALL diff");
                     break;
                     default:
                         expression.value = null; //add retorno literal      
@@ -202,6 +221,7 @@ public class Coder implements Visitor{
                                 //System.out.println(valueAux+"+"+aux.term.value);
                                 valueAux = Float.toString(Float.parseFloat(valueAux) + Float.parseFloat(aux.term.value));
                             }
+                            System.out.println("CALL add");
                         break;
                         case Token.SUB:
                             if(valueAux == null || aux.term.value == null){
@@ -209,6 +229,7 @@ public class Coder implements Visitor{
                             } else {
                                 valueAux = Integer.toString(Integer.parseInt(valueAux) - Integer.parseInt(aux.term.value));
                             }
+                            System.out.println("CALL sub");
                         break;
                         case Token.OR:
                             if(valueAux == null || aux.term.value == null){
@@ -227,10 +248,10 @@ public class Coder implements Visitor{
 
     @Override
     public void visitIterativo(Iterativo iterative) {
-        if(iterative.expression != null){
-            iterative.expression.visit(this);
-        }
         
+        System.out.println("JUMP h");
+        
+        System.out.print("gI: ");
         if(iterative.command instanceof Atribuicao){
             ((Atribuicao)iterative.command).visit(this);
         } else if(iterative.command instanceof ComandoComposto){
@@ -240,6 +261,13 @@ public class Coder implements Visitor{
         } else if(iterative.command instanceof Condicional){
             ((Condicional)iterative.command).visit(this);
         }
+        
+        System.out.print("hI: ");
+        if(iterative.expression != null){
+            iterative.expression.visit(this);
+        }
+        
+        System.out.println("JUMPIF(1) gI");
     }
 
     @Override
@@ -267,6 +295,9 @@ public class Coder implements Visitor{
     @Override
     public void visitLiteral(Literal literal) {
         literal.value = literal.name.value;
+        if(literal.type.equals("integer")){
+            System.out.println("LOADL "+literal.value);
+        }
         //System.out.println(literal.value);
     }
 
@@ -312,10 +343,20 @@ public class Coder implements Visitor{
                 if(aux.operator != null){
                     switch(aux.operator.kind){
                         case Token.DIV:
-                            valueAux = Float.toString(Float.parseFloat(valueAux) / Float.parseFloat(aux.value));
+                            if(valueAux == null || aux.value == null){
+                                valueAux = null;
+                            } else {
+                                valueAux = Float.toString(Float.parseFloat(valueAux) / Float.parseFloat(aux.value));
+                            }
+                            System.out.println("CALL div");
                         break;
                         case Token.MULT:
-                            valueAux = Float.toString(Float.parseFloat(valueAux) * Float.parseFloat(aux.value));
+                            if(valueAux == null || aux.value == null){
+                                valueAux = null;
+                            } else {
+                                valueAux = Float.toString(Float.parseFloat(valueAux) * Float.parseFloat(aux.value));
+                            }
+                            System.out.println("CALL mult");
                         break;
                         case Token.AND:
                             valueAux = Boolean.toString(Boolean.valueOf(valueAux) && Boolean.valueOf(aux.value)); 
@@ -352,6 +393,7 @@ public class Coder implements Visitor{
         if(variable.selector != null){
            variable.selector.visit(this);
        }
+        System.out.println("LOAD "+variable.id.value);
     }
     
 }

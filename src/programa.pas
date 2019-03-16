@@ -6,6 +6,7 @@ program test;
 	var vetor: array [ 1 .. 9] of integer;
 #comando composto
 begin
-		activate := (6 >= 2) and (3<>3);
+        sum := sum * sub;
+        sub := sub - 1 ;
 end.
  
