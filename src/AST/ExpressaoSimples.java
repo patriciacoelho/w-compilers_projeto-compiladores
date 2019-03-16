@@ -17,6 +17,7 @@ public class ExpressaoSimples {
     public ExpressaoSimples next;
     public Token operator;
     public String type;
+    public String value;
     
     public void visit(Visitor v){
         v.visitExpressaoSimples(this);

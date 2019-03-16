@@ -41,7 +41,7 @@ public class Parser {
             return program;
         }
 
-	private void accept (byte expectedKind) throws Exception{
+	private void accept(byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
                         lastToken = currentToken;
 			currentToken = scanner.scan();
@@ -50,6 +50,7 @@ public class Parser {
 			// erro sintatico, esperava 'expectedKind'
                         System.out.println("erro sintatico");
                         System.out.println("Esperava encontrar "+ Token.SPELLINGS[expectedKind]+"\n linha:" + lastToken.line+ "\n col:"+lastToken.col);
+                        System.out.println("Encontrado = "+Token.SPELLINGS[currentToken.kind]);
                         System.exit(1);
                 }
 	}
@@ -452,7 +453,7 @@ public class Parser {
 			break;
                     default:
                         typex = null;
-                        System.out.println("erro, esperava um tipo vlido");
+                        System.out.println("erro, esperava um tipo valido");
                         System.exit(1);
 			// erro, esperava um tipo vlido
 		}

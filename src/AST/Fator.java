@@ -11,5 +11,6 @@ package AST;
  */
 public abstract class Fator {
     public String type;
+    public String value;
 }
  

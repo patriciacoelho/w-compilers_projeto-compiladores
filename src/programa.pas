@@ -1,19 +1,11 @@
-program uendel;
-   var uendel: array[1 ..3] of boolean;
-   var x: real;
-   var luiz: real;
-   var y: integer;
+program test;
+#declaracoes
+	var sum, sub: integer;
+        var i: integer;
+	var activate: boolean;
+	var vetor: array [ 1 .. 9] of integer;
+#comando composto
 begin
-	#x := 15 + 3.5 - 7.4*3;
-    uendel[1] := 1 and false;
-    #uendel := 133 >= 5;
-    #if 32 and (2+2<>4) then
-    #    begin
-    #        x := x + 1;
-    #        x := x * x;
-    #        y := 1.4 * 7;
-    #        uendel := 5 and false;
-    #    end
-    #else
-    #    x := 0;
+		activate := (6 >= 2) and (3<>3);
 end.
+ 

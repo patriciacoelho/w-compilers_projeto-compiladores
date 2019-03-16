@@ -13,6 +13,7 @@ import Visitor.Visitor;
  */
 public class Seletor {
     public Expressao expression;
+    public String value;
     public Seletor next;
     
     public void visit(Visitor v){
