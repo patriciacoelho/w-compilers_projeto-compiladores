@@ -42,7 +42,7 @@ public class Parser {
         return program;
     }
 
-	private void accept (byte expectedKind) throws Exception{
+	private void accept(byte expectedKind) throws Exception{
 		if (currentToken.kind == expectedKind){
             lastToken = currentToken;
 			currentToken = scanner.scan();
@@ -351,7 +351,6 @@ public class Parser {
                 acceptIt();
             break;
             default:
-                literal = null;
                 System.out.print("ERRO SINTATICO: ");
                 System.out.println("Esperava encontrar um literal como limite do array ao invés de '"+
                 					currentToken.value+"' [lin: " + lastToken.line+ "; col: "+lastToken.col+"].");
@@ -456,9 +455,10 @@ public class Parser {
 			break;
                     default:
                         typex = null;
-                        System.out.println("erro, esperava um tipo valido");
+                        System.out.print("ERRO SINTATICO: ");
+                        System.out.println("Esperava encontrar um tipo válido.\nO tipo '"+
+                                                                currentToken.value+"' não é aceito pela linguagem [lin: " + lastToken.line+ "; col: "+lastToken.col+"].");
                         System.exit(1);
-			// erro, esperava um tipo vlido
 		}
                 return typex;
 	}

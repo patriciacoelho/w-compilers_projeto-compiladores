@@ -1,6 +1,6 @@
 program test;
 #declaracoes
-	var sum, sub: integer;
+	var sum, sub: string;
 	var activate: boolean;
 	var vetor: array [ 1 .. 9] of integer;
 #comando composto

@@ -308,8 +308,22 @@ public class Printer implements Visitor{
     public void visitLiteral(Literal literal) {
     	i++;
     	out("Literal",i);
+        
         if(literal.name != null){
-        	out(literal.name.value,i+2);
+            switch(literal.name.kind){
+                case 1:
+                    out("Int-lit",i+2);
+                break;
+                case 2:
+                    out("Float-lit",i+2);
+                break;
+                case 39:
+                    out("Bool-lit",i+2);
+                break;
+                default:
+                    out("qwert",i);
+            }
+            out(literal.name.value,i+4);
         }
         i--;
 

@@ -17,6 +17,7 @@ public class Termo {
     public Termo next;
     public Token operator;
     public String type;
+    public String value;
     
     public void visit(Visitor v){
         v.visitTermo(this);
