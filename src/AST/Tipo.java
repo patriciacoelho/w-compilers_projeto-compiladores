@@ -12,5 +12,6 @@ package AST;
  */
 public abstract class Tipo {
     public String type;
+    public int size;
   
 }

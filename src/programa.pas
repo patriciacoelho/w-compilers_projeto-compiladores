@@ -1,12 +1,9 @@
 program test;
 #declaracoes
-	var sum, sub: integer;
-        var i: integer;
-	var activate: boolean;
-	var vetor: array [ 1 .. 9] of integer;
+	var a: array [0 .. 5] of integer;
+        var b: integer;
 #comando composto
 begin
-        sum := sum * sub;
-        sub := sub - 1 ;
+        a := 1;
 end.
  

@@ -14,6 +14,7 @@ import Visitor.Visitor;
 public class Declaracoes {
     public DeclaracaoDeVariavel declarationOfVariable;
     public Declaracoes next;
+    public int size;
     
     public void visit(Visitor v){
         v.visitDeclaracoes(this);

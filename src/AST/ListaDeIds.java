@@ -15,6 +15,7 @@ import compiler.Token;
 public class ListaDeIds {
     public Token id;
     public ListaDeIds next;
+    public int numItens;
     
     public void visit(Visitor v){
         v.visitListaDeIds(this);

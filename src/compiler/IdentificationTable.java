@@ -22,12 +22,14 @@ public class IdentificationTable {
     public void enter(Token id, DeclaracaoDeVariavel declaration){
         if(table.put(id.value, declaration) != null){
             System.out.println("Identificador "+id.value+" já declarado. linha= "+id.line+" col="+id.col);
+            System.exit(1);
         }
     }
     
     public DeclaracaoDeVariavel retrieve(Token id){
         if(table.containsKey(id.value) == false){
             System.out.println("Identificador "+id.value+" não declarado. linha= "+id.line+" col="+id.col);
+            System.exit(1);
         } else {
             return (DeclaracaoDeVariavel)table.get(id.value);
         }

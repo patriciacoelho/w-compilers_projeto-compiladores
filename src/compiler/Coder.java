@@ -32,6 +32,8 @@ import Visitor.Visitor;
  */
 public class Coder implements Visitor{
     
+    public int size;
+    
     public void code(Programa program){ //feito
         System.out.println("Iniciando Geracao de Codigo");
         System.out.println("");
@@ -102,17 +104,19 @@ public class Coder implements Visitor{
 
     @Override
     public void visitCorpo(Corpo body) {
-        System.out.println("PUSH ");
+        
         if(body.declarations!=null){
            body.declarations.visit(this);
         }
+        System.out.println("PUSH "+body.declarations.size);
         body.compositeCommand.visit(this);
-        System.out.println("POP ");
+        System.out.println("POP "+body.declarations.size);
     }
 
     @Override
     public void visitDeclaracaoDeVariavel(DeclaracaoDeVariavel variableDeclaration) {
         variableDeclaration.listOfIds.visit(this);
+        int aux = variableDeclaration.listOfIds.numItens;
         if(variableDeclaration.type instanceof TipoAgregado){
             ((TipoAgregado)variableDeclaration.type).visit(this);
        } else{
@@ -120,15 +124,19 @@ public class Coder implements Visitor{
                 ((TipoSimples)variableDeclaration.type).visit(this);
             }
        }
+        variableDeclaration.size = variableDeclaration.type.size * aux;
     }
 
     @Override
     public void visitDeclaracoes(Declaracoes declarations) {
         Declaracoes aux = declarations;
+        int auxSize = 0;
         while(aux != null){
             aux.declarationOfVariable.visit(this);
+            auxSize += aux.declarationOfVariable.size;
             aux = aux.next;
         }
+        declarations.size = auxSize;
     }
 
     @Override
@@ -227,7 +235,7 @@ public class Coder implements Visitor{
                             if(valueAux == null || aux.term.value == null){
                                 valueAux = null;
                             } else {
-                                valueAux = Integer.toString(Integer.parseInt(valueAux) - Integer.parseInt(aux.term.value));
+                                valueAux = Float.toString(Float.parseFloat(valueAux) - Float.parseFloat(aux.term.value));
                             }
                             System.out.println("CALL sub");
                         break;
@@ -289,7 +297,11 @@ public class Coder implements Visitor{
 
     @Override
     public void visitListaDeIds(ListaDeIds listOfIds) {
-        
+        ListaDeIds aux = listOfIds;
+        while(aux != null){
+            listOfIds.numItens++;
+            aux = aux.next;
+        }
     }
 
     @Override
@@ -374,18 +386,37 @@ public class Coder implements Visitor{
 
     @Override
     public void visitTipoAgregado(TipoAgregado type) {
+        int num = 0;
+        int aux = 0;
+        
+        
         if(type.typo instanceof TipoAgregado){
             ((TipoAgregado)type.typo).visit(this);
+            aux = type.typo.size;
         } else {
             if(type.typo instanceof TipoSimples){
                ((TipoSimples)type.typo).visit(this);
+               aux = type.typo.size;
             }
         }
+        num = Integer.parseInt(type.literal2.name.value) - Integer.parseInt(type.literal1.name.value) + 1;
+        type.size = aux * num;
     }
 
     @Override
     public void visitTipoSimples(TipoSimples type) {
-        
+        switch(type.type){
+            case "integer":
+                type.size = 4;
+            break;
+            case "real":
+                type.size = 8;
+            break;
+            case "boolean":
+                type.size = 1;
+            break;    
+            
+        }
     }
 
     @Override

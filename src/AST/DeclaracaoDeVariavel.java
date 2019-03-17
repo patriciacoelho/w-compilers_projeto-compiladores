@@ -14,6 +14,7 @@ import Visitor.Visitor;
 public class DeclaracaoDeVariavel {
     public ListaDeIds listOfIds;
     public Tipo type;
+    public int size;
     
     public void visit(Visitor v){
         v.visitDeclaracaoDeVariavel(this);
