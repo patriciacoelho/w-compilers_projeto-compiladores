@@ -15,8 +15,14 @@ public class DeclaracaoDeVariavel {
     public ListaDeIds listOfIds;
     public Tipo type;
     public int size;
+    public int address;
     
     public void visit(Visitor v){
         v.visitDeclaracaoDeVariavel(this);
     }
+    
+    public int calculateSize(){
+        return type.calculateSize() * listOfIds.numItens;
+    }
+    
 }

@@ -438,6 +438,7 @@ public class Parser {
 				accept(Token.RBRACKET);
 				accept(Token.OF);
 				type.typo = parseTipo();
+                                type.size = type.calculateSize();
                                 typex = type;
 			}
 			break;
@@ -447,6 +448,7 @@ public class Parser {
 			// <tipo-simples> ::= integer | real | boolean
                                 TipoSimples type = new TipoSimples();
                                 type.typo = currentToken;
+                                type.size = type.calculateSize();
 				acceptIt();
                                 typex = type;
 			}

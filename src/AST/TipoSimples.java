@@ -15,6 +15,15 @@ import compiler.Token;
 public class TipoSimples extends Tipo{
     public Token typo;
     
+    public int  calculateSize() {
+        switch (typo.kind){
+            case Token.INTEGER : return 2;
+            case Token.REAL : return 4;
+            case Token.BOOLEAN: return 1;
+            default: return 0;
+        }
+    }
+    
     public void visit(Visitor v){
         v.visitTipoSimples(this);
     }

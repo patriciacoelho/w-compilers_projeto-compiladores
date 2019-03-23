@@ -14,4 +14,5 @@ public abstract class Tipo {
     public String type;
     public int size;
   
+    public abstract int calculateSize();
 }

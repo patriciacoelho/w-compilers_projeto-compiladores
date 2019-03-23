@@ -397,7 +397,10 @@ public class Checker implements Visitor{
     @Override
     public void visitVariavel(Variavel variable) {
         //variable.value = null;
-        variable.declaration = table.retrieve(variable.id);
+        DeclarationPointer declarationPointer = table.retrieve(variable.id); 
+        variable.declaration = declarationPointer.declaracao;
+        variable.index = declarationPointer.indice;
+ 
        if(variable.declaration != null){
            variable.type = variable.declaration.type.type;
        }

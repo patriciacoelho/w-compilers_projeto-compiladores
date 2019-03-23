@@ -13,16 +13,17 @@ import AST.Programa;
  */
 public class Compiler {
     public static void main(String args[]) throws Exception{
+        String path = (args.length == 0) ? "src/programa.pas" : args[0];
         Programa program;
-        String testes = "src/programa.pas";
+//        String testes = "src/programa.pas";
         Parser parser = new Parser();
         Printer printer = new Printer();
         Checker checker = new Checker();
         Coder coder = new Coder();
-        program = parser.parse(testes); 
+        program = parser.parse(path); 
         printer.print(program);
         checker.check(program);
-        coder.code(program);
+        coder.code(program);;
     }
     
 

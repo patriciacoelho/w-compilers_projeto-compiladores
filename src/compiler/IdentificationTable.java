@@ -6,6 +6,7 @@
 package compiler;
 
 import AST.DeclaracaoDeVariavel;
+import AST.ListaDeIds;
 import java.util.HashMap;
 
 /**
@@ -26,12 +27,18 @@ public class IdentificationTable {
         }
     }
     
-    public DeclaracaoDeVariavel retrieve(Token id){
+    public DeclarationPointer retrieve(Token id){
         if(table.containsKey(id.value) == false){
             System.out.println("Identificador "+id.value+" não declarado. linha= "+id.line+" col="+id.col);
             System.exit(1);
         } else {
-            return (DeclaracaoDeVariavel)table.get(id.value);
+            int index = 0;
+            ListaDeIds ids = ((DeclaracaoDeVariavel) table.get(id.value)).listOfIds;
+            while(ids != null && !ids.id.value.equals(id.value)){
+                index++;
+                ids = ids.next;
+            }
+            return new DeclarationPointer((DeclaracaoDeVariavel)table.get(id.value), index);
         }
         return null;
     }

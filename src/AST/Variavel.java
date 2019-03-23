@@ -16,7 +16,11 @@ public class Variavel extends Fator{
     public Token id;
     public Seletor selector;
     public DeclaracaoDeVariavel declaration;
+    public int index;
     
+    public int calculateAddressBase(){
+        return declaration.address + index * declaration.type.calculateSize();
+    }
     
     public void visit(Visitor v){
         v.visitVariavel(this);

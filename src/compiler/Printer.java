@@ -311,13 +311,13 @@ public class Printer implements Visitor{
         
         if(literal.name != null){
             switch(literal.name.kind){
-                case 1:
+                case Token.INT_LIT:
                     out("Int-lit",i+2);
                 break;
-                case 2:
+                case Token.FLOAT_LIT:
                     out("Float-lit",i+2);
                 break;
-                case 39:
+                case Token.BOOLEAN:
                     out("Bool-lit",i+2);
                 break;
                 default:
