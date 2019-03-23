@@ -19,6 +19,7 @@ public class TipoAgregado extends Tipo {
         return typo.calculateSize() * (
                 Integer.parseInt(literal2.name.value) 
                 - Integer.parseInt(literal1.name.value)
+                + 1
                 );
     }    
     public void visit(Visitor v){
