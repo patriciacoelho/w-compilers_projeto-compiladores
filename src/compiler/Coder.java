@@ -21,6 +21,7 @@ import AST.Literal;
 import AST.Programa;
 import AST.Seletor;
 import AST.Termo;
+import AST.Tipo;
 import AST.TipoAgregado;
 import AST.TipoSimples;
 import AST.Variavel;
@@ -58,6 +59,29 @@ public class Coder implements Visitor{
         
         //Geracao Codigo
         int shift = becomes.variable.calculateAddressBase();
+
+        if (becomes.variable.selector != null) {
+            Seletor seletor = becomes.variable.selector;
+            Tipo typo = becomes.variable.declaration.type;
+            int sizeTypo = 0;
+            int level = 0;
+            do{
+                level ++;
+                seletor.visit(this);
+                typo = ((TipoAgregado)typo).typo;
+                sizeTypo = typo.calculateSize();
+                emit("LOADL " + sizeTypo);
+                emit("CALL mult");
+                seletor = seletor.next;
+            } while (seletor != null);
+            emit("LOADA " + shift + "[SB]");
+            while(-- level> 0){
+                emit("CALL add");
+            }
+            emit("CALL add");
+            emit("STOREI (" + sizeTypo + ")");
+            return;
+        }
         int sizeVar = becomes.variable.declaration.type.calculateSize();
         emit("STORE ("+ sizeVar +") " + shift + "[SB] "); //substituido para endereço
     }
@@ -65,7 +89,7 @@ public class Coder implements Visitor{
     @Override
     public void visitBoolLit(BoolLit boolLit) {
         boolLit.value = boolLit.name.value; //add retorno literal
-        
+        emit("LOADL " + (boolLit.value.equals("true") ? 1 : 0));
     }
 
     @Override
@@ -155,67 +179,68 @@ public class Coder implements Visitor{
     public void visitExpressao(Expressao expression) {
         expression.simpleExpression.visit(this);
         expression.value = expression.simpleExpression.value; //add retorno literal
-        if(expression.simpleExpressionR != null){
-            expression.simpleExpressionR.visit(this);
-            boolean a;
-                switch(expression.operator.value){
-                    case "<":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) < Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL greater");
-                        break;
-                    case ">":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) > Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL lesser");
-                        break;
-                    case "<=":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) <= Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL greater_equal");
-                        break;
-                    case ">=":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) >= Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL lesser_equal");
-                        break;
-                    case "=":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) == Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL equals");
-                        break;
-                    case "<>":
-                        if(expression.simpleExpression.value == null || expression.simpleExpressionR.value == null){
-                            expression.value = null;
-                        } else{
-                            a = Float.parseFloat(expression.simpleExpression.value) != Float.parseFloat(expression.simpleExpressionR.value);
-                            expression.value = Boolean.toString(a); //add retorno literal
-                        }
-                        emit("CALL diff");
-                    break;
-                    default:
-                        expression.value = null; //add retorno literal      
+        if (expression.simpleExpressionR == null) {
+            return;
+        }
+        expression.simpleExpressionR.visit(this);
+        boolean a;
+        switch (expression.operator.value) {
+            case "<":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) < Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
                 }
+                emit("CALL greater");
+                break;
+            case ">":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) > Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
+                }
+                emit("CALL lesser");
+                break;
+            case "<=":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) <= Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
+                }
+                emit("CALL greater_equal");
+                break;
+            case ">=":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) >= Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
+                }
+                emit("CALL lesser_equal");
+                break;
+            case "=":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) == Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
+                }
+                emit("CALL equals");
+                break;
+            case "<>":
+                if (expression.simpleExpression.value == null || expression.simpleExpressionR.value == null) {
+                    expression.value = null;
+                } else {
+                    a = Float.parseFloat(expression.simpleExpression.value) != Float.parseFloat(expression.simpleExpressionR.value);
+                    expression.value = Boolean.toString(a); //add retorno literal
+                }
+                emit("CALL diff");
+                break;
+            default:
+                expression.value = null; //add retorno literal      
         }
         //System.out.println(expression.value);
     }
@@ -334,13 +359,13 @@ public class Coder implements Visitor{
     @Override
     public void visitSeletor(Seletor selector) {
         Seletor aux = selector;
-        while(aux != null){
+//        while(aux != null){
             aux.expression.visit(this);
 
             selector.value = aux.expression.value; //erro aqui ??? 
             
-            aux = aux.next;
-        }
+//            aux = aux.next;
+//        }
     }
 
     @Override
@@ -434,11 +459,32 @@ public class Coder implements Visitor{
 
     @Override
     public void visitVariavel(Variavel variable) {
-        if(variable.selector != null){
-           variable.selector.visit(this);
-        }
-        int sizeVar = variable.declaration.type.calculateSize();
         int shift = variable.calculateAddressBase();
+        
+        if(variable.selector != null){
+           Seletor seletor = variable.selector;
+            Tipo typo = variable.declaration.type;
+            int sizeTypo = 0;
+            int level = 0;
+            do{
+                level ++;
+                seletor.visit(this);
+                typo = ((TipoAgregado)typo).typo;
+                sizeTypo = typo.calculateSize();
+                emit("LOADL " + sizeTypo);
+                emit("CALL mult");
+                seletor = seletor.next;
+            } while (seletor != null);
+            emit("LOADA " + shift + "[SB]");
+            while(-- level> 0){
+                emit("CALL add");
+            }
+            emit("CALL add");
+            emit("LOADI (" + sizeTypo + ")");
+            return;
+        }
+        
+        int sizeVar = variable.declaration.type.calculateSize();
         emit("LOAD ("+ sizeVar +") " + shift + "[SB] ");
     }
     
