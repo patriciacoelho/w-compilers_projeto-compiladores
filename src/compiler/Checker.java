@@ -155,7 +155,7 @@ public class Checker implements Visitor{
                 expression.type = "boolean";
             } else {
                 System.out.print("ERRO DE CONTEXTO: ");
-                System.out.println("Incompatibilidade de tipos na comparacao entre valores [linha: "+expression.operator.line+"].");
+                System.out.println("Incompatibilidade de tipos dos operandos [linha: "+expression.operator.line+"].");
                 System.exit(1);
             }
         }

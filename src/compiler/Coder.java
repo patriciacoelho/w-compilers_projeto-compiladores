@@ -43,8 +43,7 @@ public class Coder implements Visitor{
     }
     
     public void code(Programa program){ //feito
-        System.out.println("Iniciando Geracao de Codigo");
-        System.out.println("");
+        System.out.println("---> Iniciando Geracao de Codigo\n");
         program.visit(this);
     }
     

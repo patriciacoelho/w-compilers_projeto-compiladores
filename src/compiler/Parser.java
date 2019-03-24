@@ -36,7 +36,7 @@ public class Parser {
             Programa program;
             scanner = new Scanner(fileName);
             currentToken = this.scanner.scan();
-            System.out.println("---> Iniciando análise Sintática");
+            System.out.println("---> Iniciando Análise Sintática");
             program = parsePrograma();
             return program;
         }

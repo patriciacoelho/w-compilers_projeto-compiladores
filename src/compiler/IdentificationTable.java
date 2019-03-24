@@ -22,14 +22,16 @@ public class IdentificationTable {
     
     public void enter(Token id, DeclaracaoDeVariavel declaration){
         if(table.put(id.value, declaration) != null){
-            System.out.println("Identificador "+id.value+" já declarado. linha= "+id.line+" col="+id.col);
+            System.out.print("ERRO DE CONTEXTO: ");
+            System.out.println("O identificador '"+id.value+"' já foi declarado [linha= "+id.line+"].");
             System.exit(1);
         }
     }
     
     public DeclarationPointer retrieve(Token id){
         if(table.containsKey(id.value) == false){
-            System.out.println("Identificador "+id.value+" não declarado. linha= "+id.line+" col="+id.col);
+            System.out.print("ERRO DE CONTEXTO: ");
+            System.out.println("O nome '"+id.value+"' não foi declarado [linha= "+id.line+"].");
             System.exit(1);
         } else {
             int index = 0;
@@ -44,7 +46,7 @@ public class IdentificationTable {
     }
     
     public void print(){
-        System.out.println("---> Imprimindo tabela");
+        System.out.println("---> Imprimindo tabela de identificadores");
         table.keySet().forEach((name) -> {
             String key = name.toString();
             String value = table.get(name).toString();
