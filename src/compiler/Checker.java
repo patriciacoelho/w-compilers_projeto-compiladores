@@ -41,7 +41,6 @@ public class Checker implements Visitor{
     public void check(Programa program){
 //        System.out.println ("---> Iniciando Análise de Contexto");
         program.visit(this);
-        table.print();
     }
 
     @Override
@@ -117,22 +116,21 @@ public class Checker implements Visitor{
 
     @Override
     public void visitDeclaracaoDeVariavel(DeclaracaoDeVariavel variableDeclaration) {
-       ListaDeIds aux = variableDeclaration.listOfIds;
+        ListaDeIds aux = variableDeclaration.listOfIds;
        
-       while(aux != null){
-               table.enter(aux.id, variableDeclaration);
-               aux = aux.next;
-
+        while(aux != null){
+            table.enter(aux.id, variableDeclaration);
+            aux = aux.next;
         }
 
-       if(variableDeclaration.type instanceof TipoAgregado){
+        if(variableDeclaration.type instanceof TipoAgregado){
             ((TipoAgregado)variableDeclaration.type).visit(this);
 
-       } else{
+        } else{
             if(variableDeclaration.type instanceof TipoSimples){
                 ((TipoSimples)variableDeclaration.type).visit(this);
             }
-       }
+        }
     }
 
     @Override

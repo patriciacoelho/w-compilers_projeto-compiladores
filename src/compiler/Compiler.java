@@ -26,7 +26,7 @@ public class Compiler {
             switch(arg) {
                 case "--lexical": _LEXICAL_DEBUG_ = true; break;
                 case "--parser" : _PARSER_DEBUG_  = true; break;
-                case "--checer" : _CHECKER_DEBUG_ = true; break;
+                case "--checker" : _CHECKER_DEBUG_ = true; break;
                 case "--coder"  : _CODER_DEBUG_   = true; break;
                 case "--all"    : _LEXICAL_DEBUG_ = true;
                                   _PARSER_DEBUG_  = true;
@@ -56,6 +56,9 @@ public class Compiler {
             System.out.println("\n\n");
         }
         checker.check(program);
+        if (_CHECKER_DEBUG_) {
+            checker.table.print();
+        }
         coder.code(program);
     }
 }
