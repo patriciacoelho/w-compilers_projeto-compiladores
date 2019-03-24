@@ -35,7 +35,7 @@ public class Printer implements Visitor{
     int i=0;
     int lvl = 0;
     public void print(Programa program){
-        System.out.println("---> Iniciando impress�o da �rvore");
+        System.out.println("---> Iniciando impressão da árvore");
         program.visit(this);
     }
 

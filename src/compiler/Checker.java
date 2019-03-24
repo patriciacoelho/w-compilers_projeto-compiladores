@@ -39,7 +39,7 @@ public class Checker implements Visitor{
     }
 
     public void check(Programa program){
-        System.out.println ("---> Iniciando identificacao de nomes e tipos");
+        System.out.println ("---> Iniciando Análise de Contexto");
         program.visit(this);
     }
 
@@ -53,7 +53,9 @@ public class Checker implements Visitor{
             if(becomes.variable.type.equals(becomes.expression.type)){     
             } else if(becomes.variable.type.equals("real") && becomes.expression.type.equals("integer")){
             } else {
-                System.out.println("Atribuicao de valores incompatíveis linha:"+becomes.variable.id.line+" coluna:"+becomes.variable.id.col);
+                System.out.print("ERRO DE CONTEXTO: ");
+                System.out.println("Atribuicao de tipos incompatíveis [linha:"+becomes.variable.id.line+"].");
+                System.exit(1);
             }
         }
         //System.out.println(becomes.variable.id.value+" valor variavel="+becomes.variable.value+becomes.expression.value);
@@ -77,7 +79,9 @@ public class Checker implements Visitor{
             conditional.expression.visit(this);
             //decoracao arvore
             if(!conditional.expression.type.equals("boolean")){
-                System.out.println("Expressão booleana esperada "+conditional.expression.type);//to do Token linha e coluna
+                System.out.print("ERRO DE CONTEXTO: ");//to do Token linha
+                System.out.println("Esperava encontrar uma expressão booleana ao invés de "+conditional.expression.type+".");
+                System.exit(1);
             }
         }
 
@@ -150,7 +154,9 @@ public class Checker implements Visitor{
             if("real".equals(expression.simpleExpressionR.type) || expression.simpleExpressionR.type.equals("integer") ){
                 expression.type = "boolean";
             } else {
-                System.out.println("Comparacao entre valores incompativeis linha= "+expression.operator.line);
+                System.out.print("ERRO DE CONTEXTO: ");
+                System.out.println("Incompatibilidade de tipos na comparacao entre valores [linha: "+expression.operator.line+"].");
+                System.exit(1);
             }
         }
     }
@@ -180,26 +186,31 @@ public class Checker implements Visitor{
                                 		place = "real";
                                             break;
                                             default:
-                                		System.out.println("Operandos invalidos");
+                                                System.out.print("ERRO DE CONTEXTO: ");
+                                		System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                                 System.exit(1);
                                 	}
                                 break;
                                 case "real":
                                     if ( aux.term.type.equals("boolean") ) {
-                                    	System.out.println("Operandos invalidos");
+                                    	System.out.print("ERRO DE CONTEXTO: ");
+                                	System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                         System.exit(1);
                                     }
                                     place = "real";
                                 break;
                                 default:
-                                    System.out.println("Operandos invalidos");
+                                    System.out.print("ERRO DE CONTEXTO: ");
+                                    System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                     System.exit(1);
                             }
                             
                         break;
                         case Token.OR:
                             if(!place.equals("boolean") || !aux.term.type.equals("boolean")){
-                                System.out.println("Operandos invalidos linha: "+aux.operator.line);
+                                System.out.print("ERRO DE CONTEXTO: ");
+                                System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
+                                System.exit(1);
                             }
                             place = "boolean";
                         break;
@@ -219,7 +230,9 @@ public class Checker implements Visitor{
         }
 
         if(!iterative.expression.type.equals("boolean")){
-            System.out.println("Expressão booleana esperada "+iterative.expression.type);
+            System.out.print("ERRO DE CONTEXTO: ");//to do Token linha
+            System.out.println("Esperava encontrar uma expressão booleana ao invés de "+iterative.expression.type+".");
+            System.exit(1);
         }
 
         if(iterative.command instanceof Atribuicao){
@@ -281,7 +294,9 @@ public class Checker implements Visitor{
         while(aux != null){
             aux.expression.visit(this);  
             if(!aux.expression.type.equals("integer")){
-                System.out.println("Tipo inválido de seletor");
+                System.out.print("ERRO DE CONTEXTO: ");//to do Token linha
+                System.out.println("Esperava encontrar inteiro como indice do seletor.");
+                System.exit(1);
             }
             aux = aux.next;
         }
@@ -322,7 +337,9 @@ public class Checker implements Visitor{
                 	switch(aux.operator.kind){
                             case Token.DIV:
                         	if(place.equals("boolean") || aux.type.equals("boolean")){
-                                    System.out.println("Operandos invalidos linha: "+aux.operator.line);
+                                    System.out.print("ERRO DE CONTEXTO: ");
+                                    System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
+                                    System.exit(1);
                                 }
                         	place = "real";
                             break;
@@ -337,7 +354,8 @@ public class Checker implements Visitor{
                                 		place = "real";
                                             break;
                                             default:
-                                		System.out.println("Operandos invalidos");
+                                		System.out.print("ERRO DE CONTEXTO: ");
+                                                System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                                 System.exit(1);
                                             }
                                     break;
@@ -348,18 +366,22 @@ public class Checker implements Visitor{
                                 		place = "real";
                                             break;
                                             default:
-                                		System.out.println("Operandos invalidos");
+                                		System.out.print("ERRO DE CONTEXTO: ");
+                                                System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                                 System.exit(1);
                                 	}
                                     break;
                                     default:
-                                        System.out.println("Operandos invalidos");
+                                        System.out.print("ERRO DE CONTEXTO: ");
+                                        System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
                                         System.exit(1);
                             }
                         break;
                         case Token.AND:
                             if(!place.equals("boolean") || !aux.type.equals("boolean")){
-                                System.out.println("Operandos invalidos linha: "+aux.operator.line);
+                               System.out.print("ERRO DE CONTEXTO: ");
+                               System.out.println("Incompatibilidade de tipos dos operandos [linha: "+aux.operator.line+"].");
+                               System.exit(1);
                             }
                             place = "boolean";
                         break;
@@ -385,7 +407,9 @@ public class Checker implements Visitor{
         type.type = type.typo.type;
         
         if(Integer.parseInt(type.literal1.name.value) > Integer.parseInt(type.literal2.name.value)){
-            System.out.println("Declaracao invalida de Array");
+            System.out.print("ERRO DE CONTEXTO: ");
+            System.out.println("Limite superior do array menor que o limite inferior[linha: "+type.literal2.name.line+"].");
+            System.exit(1);
         }
     }
 
