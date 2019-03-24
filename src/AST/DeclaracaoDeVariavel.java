@@ -16,6 +16,8 @@ public class DeclaracaoDeVariavel {
     public Tipo type;
     public int size;
     public int address;
+    public int line;
+    public int column;
     
     public void visit(Visitor v){
         v.visitDeclaracaoDeVariavel(this);

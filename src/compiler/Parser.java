@@ -154,6 +154,8 @@ public class Parser {
         private DeclaracaoDeVariavel parseDeclaracaoDeVariavel() throws Exception{
             //System.out.println("Parse declaracao de variavel ");
             DeclaracaoDeVariavel variableDeclaration = new DeclaracaoDeVariavel();
+            variableDeclaration.line = currentToken.line;
+            variableDeclaration.column = currentToken.col;
             accept(Token.VAR);
             variableDeclaration.listOfIds = parseListaDeIds();
             accept(Token.COLON);

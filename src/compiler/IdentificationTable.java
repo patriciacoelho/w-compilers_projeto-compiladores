@@ -47,10 +47,17 @@ public class IdentificationTable {
     
     public void print(){
         System.out.println("---> Imprimindo tabela de identificadores");
+        
         table.keySet().forEach((name) -> {
             String key = name.toString();
             String value = table.get(name).toString();
-            System.out.println(key + " " + value);
+            System.out.println(String.format("%30s", key) 
+                    + String.format("%40s", value)
+                    + String.format("%20s",
+                            "linha: " + ((DeclaracaoDeVariavel)table.get(key)).line 
+                            + " coluna: " + ((DeclaracaoDeVariavel)table.get(key)).column)
+            );
+//            System.out.println("value");
         });
     }
 }
