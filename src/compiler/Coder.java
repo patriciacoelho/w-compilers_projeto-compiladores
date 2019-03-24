@@ -68,7 +68,9 @@ public class Coder implements Visitor{
             do{
                 level ++;
                 seletor.visit(this);
-                typo = ((TipoAgregado)typo).typo;
+                if (typo instanceof TipoAgregado) {
+                    typo = ((TipoAgregado)typo).typo;
+                }
                 sizeTypo = typo.calculateSize();
                 emit("LOADL " + sizeTypo);
                 emit("CALL mult");
@@ -469,7 +471,9 @@ public class Coder implements Visitor{
             do{
                 level ++;
                 seletor.visit(this);
-                typo = ((TipoAgregado)typo).typo;
+                if (typo instanceof TipoAgregado) {
+                    typo = ((TipoAgregado)typo).typo;
+                }
                 sizeTypo = typo.calculateSize();
                 emit("LOADL " + sizeTypo);
                 emit("CALL mult");

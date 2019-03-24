@@ -17,8 +17,8 @@ public class TipoSimples extends Tipo{
     
     public int  calculateSize() {
         switch (typo.kind){
-            case Token.INTEGER : return 2;
-            case Token.REAL : return 4;
+            case Token.INTEGER : return 4;
+            case Token.REAL : return 8;
             case Token.BOOLEAN: return 1;
             default: return 0;
         }
