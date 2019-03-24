@@ -26,7 +26,11 @@ public class Token {
 
     @Override
     public String toString(){
-        return value+" "+kind+" "+line+" "+col;
+        return this.value+" | "+this.kind+" | "+this.line+" | "+this.col;
+    }
+
+    public void print(){
+        System.out.printf("%20s | %4d | %4d | %3d \n", this.value, this.kind, this.line, this.col);
     }
 
 

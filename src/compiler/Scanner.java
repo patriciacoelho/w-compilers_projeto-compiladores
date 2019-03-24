@@ -1,7 +1,9 @@
 package compiler;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -14,32 +16,33 @@ public class Scanner {
     private StringBuffer currentValue;
 
 
-    public Scanner(String fileName)throws Exception{
-        BufferedReader file = new BufferedReader(new FileReader(fileName));
-        this.file = file;
-        currentChar = (char)file.read(); //TO DO : pegar primeiro caractere do txt
-        //System.out.println(currentChar);
-        //System.out.println("valor corrente = "+currentValue);
-        col=0;
-        line=1;
+    public Scanner(String fileName){
+    	this.file = sourceFile(fileName);
     }
 
-    private void take(char expectedChar) throws Exception{
-        if(currentChar == expectedChar){
-            currentValue.append(currentChar);
-            currentChar = (char)file.read(); //currentChar = proximo caractere;
-            //System.out.println(currentChar);
-        } else {
-            //retorna token erro
-        }
+    private BufferedReader sourceFile(String fileName) {
+    	BufferedReader file;
+		try {
+			file = new BufferedReader(new FileReader(fileName));
+		    currentChar = (char) file.read();
+		    col=0;
+		    line=1;
+		    return file;
+		} catch (FileNotFoundException e) {
+			System.out.println("ERRO: Programa fonte não encontrado\n[" + e + "].");
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("ERRO: Programa fonte não encontrado\n[" + e + "].");
+			System.exit(1);
+		}
+		return null;
     }
-
     private void takeIt() throws Exception{
         currentValue.append(currentChar);
-        currentChar = (char)file.read(); //currentChar = proximo caractere;
-        //System.out.println(currentChar);
-
-        col++;
+        if( file != null) {
+        	currentChar = (char) file.read();
+            col++;
+        }
     }
 
     private boolean isDigit(char c){
@@ -53,9 +56,9 @@ public class Scanner {
     private boolean isGraphic(char c){
         boolean x = (c >= 32 && c<= 126);
         boolean y = false;
-//        if(c == '�' || c == '~'){
-//                y = true;
-//        }
+        if(c == '�' || c == '~'){
+                y = true;
+        }
         return x || y;
     }
 
@@ -201,14 +204,8 @@ public class Scanner {
             aux = col;
             return Token.EQUAL;
         }
-        //TO DO : LER O EOF e o float-lit
-        //System.out.println((int)currentChar);
-        //System.out.println("o vilão está acima");
         takeIt();
         return Token.ERROR;
-
-
-        //TO DO : return erro
     }
 
     private void scanSeparator() throws Exception{ //Revisar simbolos
@@ -218,10 +215,9 @@ public class Scanner {
                 aux = col;
                 while(isGraphic(currentChar)){
                     takeIt();
-
                 }
-                take('\n');
-                //line++;
+                if (currentChar == '\n')
+                    takeIt();
                 col=-1;
             }
             break;
@@ -239,8 +235,6 @@ public class Scanner {
     public Token scan() throws Exception{
         currentValue = new StringBuffer("");
         while(currentChar == '#' || currentChar == ' ' || currentChar == '\n' || currentChar == 13 || currentChar == '\t' || currentChar == 10){
-            //System.out.println("opa");
-            //System.out.println((int)currentChar);
             scanSeparator();
         }
         currentValue.delete(0,currentValue.length());
@@ -253,7 +247,6 @@ public class Scanner {
         Token tk;
         do{
             tk = scan();
-            //tk.imprimir();
             lista.add(tk);
         }while(tk.kind != Token.EOF);
         return lista;
