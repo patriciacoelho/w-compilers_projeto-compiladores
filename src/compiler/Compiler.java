@@ -12,12 +12,29 @@ import AST.Programa;
  * @author Uendel
  */
 public class Compiler {
+    
+    public static boolean _LEXICAL_DEBUG_ = false;
+    public static boolean _PARSER_DEBUG_ = false;
+    public static boolean _CHECKER_DEBUG_ = false;
+    public static boolean _CODER_DEBUG_ =false;
+    
     public static void main(String args[]) throws Exception{
         String path = (args.length == 0) ? "src/programa.pas" : args[0];
         Programa program;
-        boolean lexical_debug = false;
-
-        if ( lexical_debug ) {
+        
+        for (String arg : args){
+            switch(arg) {
+                case "--lexical": _LEXICAL_DEBUG_ = true; break;
+                case "--parser" : _PARSER_DEBUG_  = true; break;
+                case "--checer" : _CHECKER_DEBUG_ = true; break;
+                case "--coder"  : _CODER_DEBUG_   = true; break;
+                case "--all"    : _LEXICAL_DEBUG_ = true;
+                                  _PARSER_DEBUG_  = true;
+                                  _CHECKER_DEBUG_ = true;
+                                  _CODER_DEBUG_   = true;
+            }
+        }
+        if (_LEXICAL_DEBUG_) {
         	System.out.println("============ Lexical Debugger ============\n");
         	Scanner scanner = new Scanner(path);
 	        Token tk;
@@ -27,15 +44,18 @@ public class Compiler {
 	            tk = scanner.scan();
 	            tk.print();
 	        } while(tk.kind != Token.EOF);
-        } else {
-            Parser parser = new Parser();
-            Printer printer = new Printer();
-            Checker checker = new Checker();
-            Coder coder = new Coder();
-            program = parser.parse(path);
-            printer.print(program);
-            checker.check(program);
-            coder.code(program);
+                System.out.println("\n\n");
         }
+        Parser parser = new Parser();
+        Printer printer = new Printer();
+        Checker checker = new Checker();
+        Coder coder = new Coder();
+        program = parser.parse(path);
+        if (_PARSER_DEBUG_) {
+            printer.print(program);
+            System.out.println("\n\n");
+        }
+        checker.check(program);
+        coder.code(program);
     }
 }

@@ -38,12 +38,14 @@ public class Coder implements Visitor{
     public int size;
     
     public void emit(String instruction){
-        System.out.println(instruction);
+        if (Compiler._CODER_DEBUG_){
+            System.out.println(instruction);
+        }
         // opcionalmente escrever em um arquivo;
     }
     
     public void code(Programa program){ //feito
-        System.out.println("---> Iniciando Geracao de Codigo\n");
+//        System.out.println("---> Iniciando Geracao de Codigo\n");
         program.visit(this);
     }
     

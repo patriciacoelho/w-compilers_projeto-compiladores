@@ -39,8 +39,9 @@ public class Checker implements Visitor{
     }
 
     public void check(Programa program){
-        System.out.println ("---> Iniciando Análise de Contexto");
+//        System.out.println ("---> Iniciando Análise de Contexto");
         program.visit(this);
+        table.print();
     }
 
     @Override
