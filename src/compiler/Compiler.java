@@ -38,8 +38,9 @@ public class Compiler {
                                   if (i+1 >= args.length) {
                                       System.out.println("Erro: o caminho do arquivo deve ser informado após --file");
                                       System.exit(1);
-                                  }   
+                                  }
                                   path = args[i+1];
+                                  i++;
                                   break;
             }
         }
