@@ -49,9 +49,11 @@ public class Checker implements Visitor{
         becomes.expression.visit(this);
 
         //Verificacao de tipos
-        if(becomes.variable.type != null && becomes.expression.value != null){
-            if(becomes.variable.type.equals(becomes.expression.type)){     
+        if(becomes.variable.type != null || becomes.expression.value != null){
+            if(becomes.variable.type.equals(becomes.expression.type)){
+                
             } else if(becomes.variable.type.equals("real") && becomes.expression.type.equals("integer")){
+            
             } else {
                 System.out.print("ERRO DE CONTEXTO: ");
                 System.out.println("Atribuicao de tipos incompatíveis [linha:"+becomes.variable.id.line+"].");
