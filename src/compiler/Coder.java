@@ -46,7 +46,11 @@ public class Coder implements Visitor{
     
     public Coder (){
         int lastDot = Compiler.path.lastIndexOf(".");
-        filename = Compiler.path.substring(0, lastDot) + ".tam";
+        if (lastDot > 0){
+            filename = Compiler.path.substring(0, lastDot) + ".tam";
+        } else {
+            filename = Compiler.path + ".tam";
+        }
         try{
             FileWriter arq = new FileWriter(filename);
             PrintWriter gravarArq = new PrintWriter(arq);
