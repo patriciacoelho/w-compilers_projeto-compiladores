@@ -26,6 +26,12 @@ import AST.TipoAgregado;
 import AST.TipoSimples;
 import AST.Variavel;
 import Visitor.Visitor;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  *
@@ -36,12 +42,29 @@ public class Coder implements Visitor{
     private int count_labels = 0; 
     private int sp = 0;
     public int size;
+    private String filename;
     
+    public Coder (){
+        int lastDot = Compiler.path.lastIndexOf(".");
+        filename = Compiler.path.substring(0, lastDot) + ".tam";
+        try{
+            FileWriter arq = new FileWriter(filename);
+            PrintWriter gravarArq = new PrintWriter(arq);
+            arq.close();
+        } catch(IOException e) {
+            System.out.println("Erro ao criar arquivo de saida: " + e.getMessage());
+        }
+    }
     public void emit(String instruction){
         if (Compiler._CODER_DEBUG_){
             System.out.println(instruction);
         }
-        // opcionalmente escrever em um arquivo;
+        try {    
+            Files.write(Paths.get(filename), (instruction + "\n").getBytes(), StandardOpenOption.APPEND);   
+        } catch (IOException e) {
+           System.err.println("Erro ao gravar no arquivo de saida: " + e.getMessage());
+           System.exit(1);
+        }
     }
     
     public void code(Programa program){ //feito

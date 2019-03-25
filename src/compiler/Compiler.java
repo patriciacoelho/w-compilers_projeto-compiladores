@@ -17,16 +17,17 @@ public class Compiler {
     public static boolean _PARSER_DEBUG_ = false;
     public static boolean _CHECKER_DEBUG_ = false;
     public static boolean _CODER_DEBUG_ =false;
+    public static String path;
     
     public static void main(String args[]) throws Exception{
-        String path = (args.length == 0) ? "src/programa.pas" : args[0];
+        path = (args.length == 0) ? "src/programa.pas" : args[0];
         Programa program;
         
         for (String arg : args){
             switch(arg) {
                 case "--lexical": _LEXICAL_DEBUG_ = true; break;
                 case "--parser" : _PARSER_DEBUG_  = true; break;
-                case "--checker" : _CHECKER_DEBUG_ = true; break;
+                case "--checker": _CHECKER_DEBUG_ = true; break;
                 case "--coder"  : _CODER_DEBUG_   = true; break;
                 case "--all"    : _LEXICAL_DEBUG_ = true;
                                   _PARSER_DEBUG_  = true;
